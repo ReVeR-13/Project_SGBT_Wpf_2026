@@ -1,0 +1,58 @@
+﻿<Window x:Class="Wpf_App_Pattoon_Animalerie.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Wpf_App_Pattoon_Animalerie"
+        mc:Ignorable="d"
+        Title="MainWindow" MinHeight="600" MinWidth="1300">
+    <Grid Background="#FF06435D">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="59*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+            <StackPanel.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#00000000" Offset="0"/>
+                    <GradientStop Color="#FF06435D" Offset="1"/>
+                </LinearGradientBrush>
+            </StackPanel.Background>
+
+            <StackPanel Height="60" Width="60" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock  Text="[- LOGO -]" Foreground="#FFE6DDDD" TextAlignment="Center" TextWrapping="WrapWithOverflow"/>
+            </StackPanel>
+
+            <Button Content="Demande" Height="35" Width="140" Margin="0,5" Command="{Binding DemandeCommande}"/>
+            <Button Content="Animal" Height="35" Width="140" Margin="0,5" Command="{Binding AnimalCommande}"/>
+            <Button Content="Contact" Height="35" Width="140" Margin="0,5" Command="{Binding ContactCommande}"/>
+
+            <StackPanel Margin="0,10">
+                <TextBlock Text="Acces Rapide" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2" Foreground="#FFFFFFC2"/>
+
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                    <Button Content="Vaccin" Command="{Binding AfficherVaccinsCommand}" Height="24" Width="140" Margin="0,1" Background="#FF02374E" Foreground="White" BorderBrush="{x:Null}"/>
+                    <Button Content="Abri"   Command="{Binding ShowPage1Commande}" Height="24" Width="140" Margin="0,1" Background="#FF02374E" Foreground="White" BorderBrush="{x:Null}"/>
+                    <Button Content="Type Animale" Command="{Binding ShowPage2Commande}" Height="24" Width="140" Margin="0,1" Background="#FF02374E" Foreground="White" BorderBrush="{x:Null}"/>
+                    <Button Content="Compatibilité" Command="{Binding CompatibiliteCommande}" Height="24" Width="140" Margin="0,1" Background="#FF02374E" Foreground="White" BorderBrush="{x:Null}"/>
+                    <Button Content="Couleur" Command="{Binding CouleurCommande}" Height="24" Width="140" Margin="0,1" Background="#FF02374E" Foreground="White" BorderBrush="{x:Null}"/>
+                    <Button Content="Type Contact" Command="{Binding TypeContactCommande}" Height="24" Width="140" Margin="0,1" Background="#FF02374E" Foreground="White" BorderBrush="{x:Null}"/>
+                    <Button Content="Motif Entree" Command="{Binding MotifEntreeCommande}" Height="24" Width="140" Margin="0,1" Background="#FF02374E" Foreground="White" BorderBrush="{x:Null}"/>
+                    <Button Content="Motif Sortie" Command="{Binding MotifSortieCommande}" Height="24" Width="140" Margin="0,1" Background="#FF02374E" Foreground="White" BorderBrush="{x:Null}"/>
+                    <Button Content="Entree" Command="{Binding EntreeCommande}" Height="24" Width="140" Margin="0,1" Background="#FF02374E" Foreground="White" BorderBrush="{x:Null}"/>
+                    <Button Content="Sortie" Command="{Binding SortieCommande}" Height="24" Width="140" Margin="0,1" Background="#FF02374E" Foreground="White" BorderBrush="{x:Null}"/>
+                    <Button Content="Page 3" Command="{Binding ShowPage2Commande}" Height="24" Width="140" Margin="0,1" Background="#FF02374E" Foreground="White" BorderBrush="{x:Null}"/>
+                </StackPanel>
+            </StackPanel>
+
+        </StackPanel>
+
+        <ContentControl Grid.Column="1" Margin="35,33,35,32" 
+                    Content="{Binding VueCourrante}" 
+                    Style="{StaticResource AnimatedContentControl}"/>
+
+
+
+    </Grid>
+</Window>

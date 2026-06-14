@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
+  <ItemGroup>
+    <Compile Update="View\UserControlView\AnimalView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\CompatibiliteView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\ContactView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\CouleurView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\DemandeView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\Details\Details_ContactView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\EntreeView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\MotifEntreeView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\MotifSortieView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\Page1View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\Page2View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\SelectionView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\SortieView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\TypeContactView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\VaccinView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\WindowView\DetailView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\WindowView\PopupView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>
