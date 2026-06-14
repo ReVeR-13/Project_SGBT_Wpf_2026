@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+using Wpf_App_Pattoon_Animalerie.ViewModel.WindowViewModel;
+
+namespace Wpf_App_Pattoon_Animalerie.View.WindowView
+{
+    /// <summary>
+    /// Logique d'interaction pour DetailView.xaml
+    /// </summary>
+    public partial class DetailView : Window
+    {
+        public DetailView()
+        {
+            InitializeComponent();
+            
+        }
+    }
+}
