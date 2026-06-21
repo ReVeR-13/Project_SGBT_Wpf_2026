@@ -8,37 +8,35 @@ using System.Windows.Input;
 using Wpf_App_Pattoon_Animalerie.Commands;
 using Wpf_App_Pattoon_Animalerie.Modele;
 using Wpf_App_Pattoon_Animalerie.Service;
-using Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details;
 
-namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
+namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details
 {
-    public class CouleurViewModel : BaseViewModel
+    public class CouleurDetailViewModel:BaseViewModel
     {
-        private IWindowService _windowService;
-        private Couleur _couleurSelectionne;
-        private string _id;
-        private string _nom;
-        private string _message;
-
-        private ObservableCollection<Couleur> _lesCouleurs;
+        private Couleur? _couleurSelectionne;
+        private string? _id;
+        private DateTime _date;
+        private string? _nom;
+        private string? _message;
+        private string? _title;
 
         public ICommand AjouteCommand { get; }
         public ICommand SupprimerCommand { get; }
         public ICommand NouveauCommand { get; }
-        public ICommand OuvrirDetailCommand { get; }
 
-        public CouleurViewModel(IWindowService windowService)
+        public CouleurDetailViewModel(Couleur? couleur)
         {
-            _windowService = windowService;
-            _lesCouleurs = new ObservableCollection<Couleur>(AllCouleur.LesStocks.Values);
+            _couleurSelectionne = couleur;
+            _id = couleur != null ? couleur.Id : string.Empty;
+            _date = couleur != null ? couleur.DateCreation : DateTime.Now;
+            _nom = couleur != null ? couleur.Nom : string.Empty;
             _message = string.Empty;
-            _id = string.Empty;
-            _nom = string.Empty;
+
+            _title = couleur == null ? "CREATION DE COULEUR" : $"FICHE DE LA COULEUR N° [ {couleur.Id} ]";
 
             NouveauCommand = new RelayCommand(_ => NouveauCouleur(), _ => true);
             AjouteCommand = new RelayCommand(_ => AjouteOuMettreAJour(), _ => PeutEnregistrer());
             SupprimerCommand = new RelayCommand(_ => SupprimerCouleur(), _ => this.CouleurSelectionne != null);
-            OuvrirDetailCommand = new RelayCommand(_ => OuvrirDetail(), _ => this.CouleurSelectionne != null);
 
         }
 
@@ -52,6 +50,21 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
             get { return _nom; }
             set { _nom = value; OnPropertyChanged(); }
         }
+        public DateTime Date
+        {
+            get { return _date; }
+            set { _date = value; OnPropertyChanged(); }
+        }
+        public string Message
+        {
+            get { return _message; }
+            set { _message = value; OnPropertyChanged(); }
+        }
+        public string Title
+        {
+            get { return _title; }
+            set { _title = value; OnPropertyChanged(); }
+        }
         public Couleur CouleurSelectionne
         {
             get { return _couleurSelectionne; }
@@ -64,28 +77,20 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
                 {
                     Id = value.Id;
                     Nom = value.Nom;
+                    Date = value.DateCreation;
                     Message = string.Empty;
                 }
             }
-        }
-
-        public ObservableCollection<Couleur> LesCouleur
-        {
-            get { return _lesCouleurs; }
-        }
-
-
-        public string Message
-        {
-            get => _message;
-            set { _message = value; OnPropertyChanged(); }
         }
 
         private void NouveauCouleur()
         {
             CouleurSelectionne = null;
             Nom = string.Empty;
+            Date = DateTime.Now;
             Id = string.Empty;
+            Message = string.Empty;
+            Title = "CREATION DE COULEUR";
         }
         private bool PeutEnregistrer()
         {
@@ -106,7 +111,7 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
                         {
                             AllCouleur.DB_Sync();
                             this.Message = LesMessage.SuccesAjout;
-                            LesCouleur.Add(nouveau);
+                            
                         }
 
                     }
@@ -140,7 +145,6 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
                     if (Couleur.Delete(this.CouleurSelectionne) == 1)
                     {
                         AllCouleur.DB_Sync();
-                        LesCouleur.Remove(CouleurSelectionne);
 
                         Message = LesMessage.SuccesSuppression;
 
@@ -155,11 +159,5 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
             }
         }
 
-        private void OuvrirDetail()
-        {
-            var vm = new CouleurDetailViewModel(CouleurSelectionne);
-            _windowService.OuvrirDetail(vm);
-
-        }
     }
 }

@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Wpf_App_Pattoon_Animalerie.Commands;
 using Wpf_App_Pattoon_Animalerie.Modele;
 using Wpf_App_Pattoon_Animalerie.Service;
+using Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details;
 
 namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
 {
@@ -20,13 +21,17 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
         private string _message;
 
         private ObservableCollection<TypeContact> _lesTypeContact;
+        private IWindowService _windowService;
 
         public ICommand AjouteCommand { get; }
         public ICommand SupprimerCommand { get; }
         public ICommand NouveauCommand { get; }
+        public ICommand OuvrirDetailCommand { get; }
 
-        public TypeContactViewModel()
+        public TypeContactViewModel(IWindowService windowService)
         {
+            _windowService = windowService;
+
             _lesTypeContact = new ObservableCollection<TypeContact>(AllTypeContact.LesStocks.Values);
             _message = string.Empty;
             _id = string.Empty;
@@ -36,7 +41,7 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
             NouveauCommand = new RelayCommand(_ => NouveauTypeContact(), _ => true);
             AjouteCommand = new RelayCommand(_ => AjouteOuMettreAJour(), _ => PeutEnregistrer());
             SupprimerCommand = new RelayCommand(_ => SupprimerTypeContact(), _ => this.TypeSelectionne != null);
-
+            OuvrirDetailCommand = new RelayCommand(_ => OuvrirDetail(), _ => this.TypeSelectionne != null);
 
         }
 
@@ -76,6 +81,7 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
         public ObservableCollection<TypeContact> LesTypes
         {
             get { return _lesTypeContact; }
+            set { _lesTypeContact = value; OnPropertyChanged(); }
         }
 
 
@@ -110,9 +116,8 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
                         TypeContact nouveau = TypeContact.Creer(Nom, Description);
                         if (TypeContact.Save(nouveau) == 1)
                         {
-                            AllTypeContact.DB_Sync();
                             this.Message = LesMessage.SuccesAjout;
-                            LesTypes.Add(nouveau);
+                            LesTypes = new ObservableCollection<TypeContact>(AllTypeContact.LesStocks.Values);
                         }
 
                     }
@@ -159,6 +164,13 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
                 }
 
             }
+        }
+
+        private void OuvrirDetail()
+        {
+            var vm = new TypeContactDetailViewModel(TypeSelectionne);
+            _windowService.OuvrirDetail(vm);
+
         }
     }
 }

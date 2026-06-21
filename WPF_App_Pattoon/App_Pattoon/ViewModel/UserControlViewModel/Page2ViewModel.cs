@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Wpf_App_Pattoon_Animalerie.Commands;
 using Wpf_App_Pattoon_Animalerie.Modele;
 using Wpf_App_Pattoon_Animalerie.Service;
+using Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details;
 
 namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
 {
@@ -20,14 +21,15 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
         private string _message;
 
         private ObservableCollection<TypeAnimal> _lesTypes;
-
+        IWindowService _windowService;
         public ICommand AjouteCommand { get; }
         public ICommand SupprimerCommand { get; }
         public ICommand NouveauCommand { get; }
+        public ICommand OuvrirDetailCommand { get; }
 
-
-        public Page2ViewModel()
+        public Page2ViewModel(IWindowService windowService)
         {
+            _windowService = windowService;
             _lesTypes = new ObservableCollection<TypeAnimal>(AllTypeAnimal.LesStocks.Values);
 
             _message = string.Empty;
@@ -38,6 +40,7 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
             NouveauCommand = new RelayCommand(_ => NouveauType(), _ => true);
             AjouteCommand = new RelayCommand(_ => AjouteOuMettreAJour(), _ => PeutEnregistrer());
             SupprimerCommand = new RelayCommand(_ => SupprimerType(), _ => this.TypeSelectionne != null);
+            OuvrirDetailCommand = new RelayCommand(_ => OuvrirDetail(), _ => this.TypeSelectionne != null);
 
         }
 
@@ -159,6 +162,13 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
                 }
 
             }
+        }
+
+        private void OuvrirDetail()
+        {
+            var vm = new TypeAnimalDetailViewModel(TypeSelectionne);
+            _windowService.OuvrirDetail(vm);
+
         }
     }
 }

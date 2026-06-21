@@ -8,43 +8,40 @@ using System.Windows.Input;
 using Wpf_App_Pattoon_Animalerie.Commands;
 using Wpf_App_Pattoon_Animalerie.Modele;
 using Wpf_App_Pattoon_Animalerie.Service;
-using Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details;
 
-namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
+namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details
 {
-    public class CompatibiliteViewModele : BaseViewModel
+    public class CompatibiliteDetailViewModel:BaseViewModel
     {
-        private Compatibilite _compatibiliteSelectionne;
-        private string _id;
-        private string _nom;
-        private string _description;
-        private string _message;
-        private IWindowService _windowService;
-
-        private ObservableCollection<Compatibilite> _lesCompatibilites;
+        private Compatibilite? _compatibiliteSelectionne;
+        private string? _id;
+        private string? _nom;
+        private DateTime _date;
+        private string? _description;
+        private string? _message;
+        private string? _title;
 
         public ICommand AjouteCommand { get; }
         public ICommand SupprimerCommand { get; }
         public ICommand NouveauCommand { get; }
-        public ICommand OuvrirDetailCommand { get; }
-
-        public CompatibiliteViewModele(IWindowService windowService)
+        public CompatibiliteDetailViewModel(Compatibilite? compatibilite)
         {
-            _windowService = windowService;
-            _lesCompatibilites = new ObservableCollection<Compatibilite>(AllCompatibilite.LesStocks.Values);
+            _compatibiliteSelectionne = compatibilite;
+            _id = compatibilite?.Id;
+            _nom = compatibilite?.Nom;
+            _date = compatibilite == null? DateTime.Now: compatibilite.DateCreation;
+            _description = compatibilite?.Details;
             _message = string.Empty;
-            _description = string.Empty;
-            _id = string.Empty;
-            _nom = string.Empty;
+
+            _title = compatibilite == null ? "CREATION DE COMPATIBILITE": $"FICHE DE LA COMPATIBILITE N° [ {compatibilite.Id} ]";
 
             NouveauCommand = new RelayCommand(_ => NouveauCompatibilite(), _ => true);
             AjouteCommand = new RelayCommand(_ => AjouteOuMettreAJour(), _ => PeutEnregistrer());
             SupprimerCommand = new RelayCommand(_ => SupprimerCompatibilite(), _ => this.CompatibiliteSelectionne != null);
-            OuvrirDetailCommand = new RelayCommand(_ => OuvrirDetail(), _ => this.CompatibiliteSelectionne != null);
 
         }
 
-        public string Id
+        public string? Id
         {
             get { return _id; }
             set { _id = value; OnPropertyChanged(); }
@@ -54,10 +51,25 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
             get { return _nom; }
             set { _nom = value; OnPropertyChanged(); }
         }
+        public DateTime Date
+        {
+            get { return _date; }
+            set { _date = value; OnPropertyChanged(); }
+        }
         public string Description
         {
             get { return _description; }
             set { _description = value; OnPropertyChanged(); }
+        }
+        public string Title
+        {
+            get { return _title; }
+            set { _title = value; OnPropertyChanged(); }
+        }
+        public string Message
+        {
+            get { return _message; }
+            set { _message = value; OnPropertyChanged(); }
         }
         public Compatibilite CompatibiliteSelectionne
         {
@@ -77,28 +89,20 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
             }
         }
 
-        public ObservableCollection<Compatibilite> LesCompatibilite
-        {
-            get { return _lesCompatibilites; }
-        }
-
-        public string Message
-        {
-            get => _message;
-            set { _message = value; OnPropertyChanged(); }
-        }
-
         private void NouveauCompatibilite()
         {
             CompatibiliteSelectionne = null;
             Nom = string.Empty;
+            Description = string.Empty;
+            Date = DateTime.Now;
             Id = string.Empty;
             Description = string.Empty;
+            Title = "CREATION DE COMPTIBILITE";
         }
         private bool PeutEnregistrer()
         {
             return !string.IsNullOrWhiteSpace(Nom)
-                && !string.IsNullOrWhiteSpace(Description);
+                ;
         }
         private void AjouteOuMettreAJour()
         {
@@ -115,7 +119,6 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
                         {
                             AllCompatibilite.DB_Sync();
                             this.Message = LesMessage.SuccesAjout;
-                            LesCompatibilite.Add(nouveau);
                         }
 
                     }
@@ -149,7 +152,6 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
                     if (Compatibilite.Delete(this.CompatibiliteSelectionne) == 1)
                     {
                         AllCompatibilite.DB_Sync();
-                        LesCompatibilite.Remove(CompatibiliteSelectionne);
 
                         Message = LesMessage.SuccesSuppression;
 
@@ -163,11 +165,6 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
 
             }
         }
-        private void OuvrirDetail()
-        {
-            var vm = new CompatibiliteDetailViewModel(CompatibiliteSelectionne);
-            _windowService.OuvrirDetail(vm);
 
-        }
     }
 }

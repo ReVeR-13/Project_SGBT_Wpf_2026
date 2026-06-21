@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Wpf_App_Pattoon_Animalerie.Commands;
 using Wpf_App_Pattoon_Animalerie.Modele;
 using Wpf_App_Pattoon_Animalerie.Service;
+using Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details;
 
 namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
 {
@@ -22,12 +23,15 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
 
         private ObservableCollection<Entree> _lesEntrees;
 
+        private IWindowService _windowService;
         public ICommand AjouteCommand { get; }
         public ICommand SupprimerCommand { get; }
         public ICommand NouveauCommand { get; }
+        public ICommand OuvrirDetailCommand { get; }
 
-        public EntreeViewModel()
+        public EntreeViewModel(IWindowService windowService)
         {
+            _windowService = windowService;
             _lesEntrees = new ObservableCollection<Entree>(AllEntree.LesStocks.Values);
             _message = string.Empty;
             _id = string.Empty;
@@ -37,7 +41,7 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
             NouveauCommand = new RelayCommand(_ => NouveauEntree(), _ => true);
             AjouteCommand = new RelayCommand(_ => AjouteOuMettreAJour(), _ => PeutEnregistrer());
             SupprimerCommand = new RelayCommand(_ => SupprimerEntree(), _ => this.EntreeSelectionne != null);
-
+            OuvrirDetailCommand = new RelayCommand(_ => OuvrirDetail(), _ => this.EntreeSelectionne != null);
 
         }
 
@@ -151,6 +155,12 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
                 this.Message = "[Erreur] : " + ex.Message;
             }
 
+
+        }
+        private void OuvrirDetail()
+        {
+            var vm = new EntreeDetailViewModel(EntreeSelectionne.Demande);
+            _windowService.OuvrirDetail(vm);
 
         }
         private void SupprimerEntree()

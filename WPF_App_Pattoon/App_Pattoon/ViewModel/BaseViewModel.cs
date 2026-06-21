@@ -35,6 +35,11 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel
         {
             var windows = new DetailView();
             windows.DataContext = viewModel;
+            if (viewModel is ICloseable closable)
+            {
+                closable.CloseFenetre += () => windows.Close();
+            }
+
             windows.ShowDialog();
         }
 

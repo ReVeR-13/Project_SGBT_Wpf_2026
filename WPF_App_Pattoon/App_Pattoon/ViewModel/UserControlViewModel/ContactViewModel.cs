@@ -38,7 +38,7 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
         public ContactViewModel(IWindowService windowService)
         {
             this._lesContacts = new ObservableCollection<Contact>(AllContacts.LesStocks.Values);
-            this._type = new TypeContactViewModel();
+            this._type = new TypeContactViewModel(windowService);
 
             _contactSelectionne = null;
             _id = string.Empty;

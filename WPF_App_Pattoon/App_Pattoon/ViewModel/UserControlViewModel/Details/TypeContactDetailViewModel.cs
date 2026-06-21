@@ -8,44 +8,57 @@ using System.Windows.Input;
 using Wpf_App_Pattoon_Animalerie.Commands;
 using Wpf_App_Pattoon_Animalerie.Modele;
 using Wpf_App_Pattoon_Animalerie.Service;
-using Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details;
 
-namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
+namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details
 {
-    public class VaccinViewModel : BaseViewModel
+    public class TypeContactDetailViewModel:BaseViewModel,ICloseable
     {
-        private Vaccin _vaccinSelectionne;
+        private TypeContact _typeSelectionne;
         private string _id;
         private string _nom;
         private string _description;
         private string _message;
-        private bool _panneau;
+        private string _title;
 
-        private ObservableCollection<Vaccin> _lesVaccins;
-        private IWindowService _windowService;
+        private ObservableCollection<TypeContact> _lesTypeContact;
+
+        public event Action CloseFenetre;
+
         public ICommand AjouteCommand { get; }
         public ICommand SupprimerCommand { get; }
         public ICommand NouveauCommand { get; }
-        public ICommand OuvrirDetailCommand { get; }
-
-        public VaccinViewModel(IWindowService windowService)
+        public TypeContactDetailViewModel(TypeContact type)
         {
-            _windowService = windowService;
-            _lesVaccins = new ObservableCollection<Vaccin>(AllVaccin.StockVaccins.Values);
-            _panneau = false;
+            _lesTypeContact = [];
+            _typeSelectionne = type;
+
+            _id = type == null ? string.Empty: type.Id;
+            _nom = type == null ? string.Empty : type.Nom;
+            _description = type == null ? string.Empty : type.Description;
             _message = string.Empty;
-            _description = string.Empty;
-            _id = string.Empty;
-            _nom = string.Empty;
 
-            NouveauCommand = new RelayCommand(_ => NouveauVaccin(), _ => true);
+            NouveauCommand = new RelayCommand(_ => NouveauTypeContact(), _ => true);
             AjouteCommand = new RelayCommand(_ => AjouteOuMettreAJour(), _ => PeutEnregistrer());
-            SupprimerCommand = new RelayCommand(_ => SupprimerVaccin(), _ => this.VaccinSelectionne != null);
-            OuvrirDetailCommand = new RelayCommand(_ => OuvrirDetail(), _ => this.VaccinSelectionne != null);
+            SupprimerCommand = new RelayCommand(_ => SupprimerTypeContact(), _ => this.TypeSelectionne != null);
 
-
+            if (type != null)
+            {
+                _lesTypeContact.Add(type);
+                _title = $"FICHE TYPE-CONTACT N° [ {_id} ]";
+            }
+            else
+            {
+                _lesTypeContact = new ObservableCollection<TypeContact>(AllTypeContact.LesStocks.Values);
+                _title = $"NOUVEAU TYPE";
+            }
+            
         }
 
+        public string Title
+        {
+            get { return _title; }
+            set { _title = value; OnPropertyChanged(); }
+        }
         public string Id
         {
             get { return _id; }
@@ -61,33 +74,29 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
             get { return _description; }
             set { _description = value; OnPropertyChanged(); }
         }
-        public Vaccin VaccinSelectionne
+        public TypeContact TypeSelectionne
         {
-            get { return _vaccinSelectionne; }
+            get { return _typeSelectionne; }
             set
             {
-                _vaccinSelectionne = value;
+                _typeSelectionne = value;
                 OnPropertyChanged();
 
                 if (value != null)
                 {
-                    Panneau = true;
                     Id = value.Id;
                     Nom = value.Nom;
                     Description = value.Description;
                     Message = string.Empty;
+                    Title = $"FICHE TYPE-CONTACT N° [ {value.Id} ]";
                 }
             }
         }
-        public bool Panneau
-        {
-            get { return _panneau; }
-            set { _panneau = value; OnPropertyChanged(); }
-        }
 
-        public ObservableCollection<Vaccin> LesVaccins
+        public ObservableCollection<TypeContact> LesTypes
         {
-            get { return _lesVaccins; }
+            get { return _lesTypeContact; }
+            set { _lesTypeContact = value; OnPropertyChanged(); }
         }
 
 
@@ -97,12 +106,14 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
             set { _message = value; OnPropertyChanged(); }
         }
 
-        private void NouveauVaccin()
+        private void NouveauTypeContact()
         {
-            VaccinSelectionne = null;
+            LesTypes = new ObservableCollection<TypeContact>(AllTypeContact.LesStocks.Values);
+            TypeSelectionne = null;
             Nom = string.Empty;
-            Id = string.Empty;
             Description = string.Empty;
+            Id = string.Empty;
+            Title = $"NOUVEAU TYPE";
         }
         private bool PeutEnregistrer()
         {
@@ -115,52 +126,52 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
 
             try
             {
-                if (this.VaccinSelectionne == null)
+                if (this.TypeSelectionne == null)
                 {
                     if (Nom != null)
                     {
-                        Vaccin nouveau = Vaccin.Creer(Nom, Description);
-                        if (Vaccin.Save(nouveau) == 1)
+                        TypeContact nouveau = TypeContact.Creer(Nom, Description);
+                        if (TypeContact.Save(nouveau) == 1)
                         {
+                            Forma.SyncAllWithDB();
                             this.Message = LesMessage.SuccesAjout;
-                            LesVaccins.Add(nouveau);
+                            LesTypes.Add(nouveau);
                         }
 
                     }
                 }
                 else
                 {
-                    if (this.VaccinSelectionne.Modifier(Nom, Description) == 1)
+                    if (this.TypeSelectionne.Update(Nom, Description) == 1)
                     {
+                        AllTypeContact.DB_Sync();
                         this.Message = LesMessage.SuccesMaj;
                     }
 
                 }
-                NouveauVaccin();
+                NouveauTypeContact();
             }
             catch (Exception ex)
             {
                 this.Message = "[Erreur] : " + ex.Message;
             }
-
-
         }
-        private void SupprimerVaccin()
+        private void SupprimerTypeContact()
         {
             Message = LesMessage.ErrorSuppression;
 
-            if (this.VaccinSelectionne != null)
+            if (this.TypeSelectionne != null)
             {
                 try
                 {
-                    if (Vaccin.Delete(this.VaccinSelectionne) == 1)
+                    if (TypeContact.Delete(this.TypeSelectionne) == 1)
                     {
-                        AllVaccin.DB_Sync();
-                        LesVaccins.Remove(VaccinSelectionne);
+                        Forma.SyncAllWithDB();
+                        LesTypes.Remove(TypeSelectionne);
 
                         Message = LesMessage.SuccesSuppression;
 
-                        NouveauVaccin();
+                        NouveauTypeContact();
                     }
                 }
                 catch (Exception ex)
@@ -169,13 +180,6 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
                 }
 
             }
-        }
-
-        private void OuvrirDetail()
-        {
-            var vm = new VaccinDetailViewModel(VaccinSelectionne);
-            _windowService.OuvrirDetail(vm);
-
         }
     }
 }

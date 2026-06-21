@@ -8,93 +8,75 @@ using System.Windows.Input;
 using Wpf_App_Pattoon_Animalerie.Commands;
 using Wpf_App_Pattoon_Animalerie.Modele;
 using Wpf_App_Pattoon_Animalerie.Service;
-using Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details;
 
-namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
+namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details
 {
-    public class VaccinViewModel : BaseViewModel
+    public class VaccinDetailViewModel:BaseViewModel, ICloseable
     {
-        private Vaccin _vaccinSelectionne;
-        private string _id;
-        private string _nom;
-        private string _description;
-        private string _message;
-        private bool _panneau;
+        private Vaccin? _vaccinSelectionne;
+        private string? _id;
+        private DateTime _date;
+        private string? _nom;
+        private string? _description;
+        private string? _message;
+        private string? _title;
 
-        private ObservableCollection<Vaccin> _lesVaccins;
-        private IWindowService _windowService;
+        public event Action CloseFenetre;
+
         public ICommand AjouteCommand { get; }
         public ICommand SupprimerCommand { get; }
         public ICommand NouveauCommand { get; }
-        public ICommand OuvrirDetailCommand { get; }
-
-        public VaccinViewModel(IWindowService windowService)
+        public VaccinDetailViewModel(Vaccin? vaccin)
         {
-            _windowService = windowService;
-            _lesVaccins = new ObservableCollection<Vaccin>(AllVaccin.StockVaccins.Values);
-            _panneau = false;
-            _message = string.Empty;
-            _description = string.Empty;
-            _id = string.Empty;
-            _nom = string.Empty;
+            _vaccinSelectionne = vaccin;
+            _id = vaccin?.Id;
+            Date = vaccin?.DateCreation;
+            Nom = vaccin?.Nom;
+            Description = vaccin?.Description;
+            _message = string.Empty; 
+            Title = vaccin == null ?"CREATION DE VACCIN": $"FICHE VACCIN DE [ {vaccin.Id} ]";
 
             NouveauCommand = new RelayCommand(_ => NouveauVaccin(), _ => true);
             AjouteCommand = new RelayCommand(_ => AjouteOuMettreAJour(), _ => PeutEnregistrer());
             SupprimerCommand = new RelayCommand(_ => SupprimerVaccin(), _ => this.VaccinSelectionne != null);
-            OuvrirDetailCommand = new RelayCommand(_ => OuvrirDetail(), _ => this.VaccinSelectionne != null);
-
-
+            
         }
 
+        public Vaccin VaccinSelectionne
+        {
+            get { return _vaccinSelectionne; }
+            set { _vaccinSelectionne = value; OnPropertyChanged(); }
+        }
         public string Id
         {
             get { return _id; }
             set { _id = value; OnPropertyChanged(); }
         }
-        public string Nom
+        public DateTime? Date
+        {
+            get { return _date; }
+            set { _date = value ?? DateTime.Now; OnPropertyChanged();}
+        }
+        public string? Nom
         {
             get { return _nom; }
             set { _nom = value; OnPropertyChanged(); }
         }
-        public string Description
+        public string? Description
         {
             get { return _description; }
             set { _description = value; OnPropertyChanged(); }
         }
-        public Vaccin VaccinSelectionne
-        {
-            get { return _vaccinSelectionne; }
-            set
-            {
-                _vaccinSelectionne = value;
-                OnPropertyChanged();
 
-                if (value != null)
-                {
-                    Panneau = true;
-                    Id = value.Id;
-                    Nom = value.Nom;
-                    Description = value.Description;
-                    Message = string.Empty;
-                }
-            }
-        }
-        public bool Panneau
+        public string? Message
         {
-            get { return _panneau; }
-            set { _panneau = value; OnPropertyChanged(); }
-        }
-
-        public ObservableCollection<Vaccin> LesVaccins
-        {
-            get { return _lesVaccins; }
-        }
-
-
-        public string Message
-        {
-            get => _message;
+            get { return _message; }
             set { _message = value; OnPropertyChanged(); }
+        }
+        public string Title
+        {
+            get { return _title; }
+            set { _title = value; OnPropertyChanged(); }
         }
 
         private void NouveauVaccin()
@@ -102,12 +84,14 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
             VaccinSelectionne = null;
             Nom = string.Empty;
             Id = string.Empty;
+            Date = DateTime.Now;
+            Message = string.Empty;
             Description = string.Empty;
+            Title = "CREATION DE VACCIN";
         }
         private bool PeutEnregistrer()
         {
-            return !string.IsNullOrWhiteSpace(Nom)
-                && !string.IsNullOrWhiteSpace(Description);
+            return !string.IsNullOrWhiteSpace(Nom);
         }
         private void AjouteOuMettreAJour()
         {
@@ -123,7 +107,6 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
                         if (Vaccin.Save(nouveau) == 1)
                         {
                             this.Message = LesMessage.SuccesAjout;
-                            LesVaccins.Add(nouveau);
                         }
 
                     }
@@ -155,9 +138,6 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
                 {
                     if (Vaccin.Delete(this.VaccinSelectionne) == 1)
                     {
-                        AllVaccin.DB_Sync();
-                        LesVaccins.Remove(VaccinSelectionne);
-
                         Message = LesMessage.SuccesSuppression;
 
                         NouveauVaccin();
@@ -169,13 +149,6 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
                 }
 
             }
-        }
-
-        private void OuvrirDetail()
-        {
-            var vm = new VaccinDetailViewModel(VaccinSelectionne);
-            _windowService.OuvrirDetail(vm);
-
         }
     }
 }

@@ -8,41 +8,38 @@ using System.Windows.Input;
 using Wpf_App_Pattoon_Animalerie.Commands;
 using Wpf_App_Pattoon_Animalerie.Modele;
 using Wpf_App_Pattoon_Animalerie.Service;
-using Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details;
 
-namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
+namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details
 {
-    public class VaccinViewModel : BaseViewModel
+    public class MotifEntreeDetailViewModel:BaseViewModel
     {
-        private Vaccin _vaccinSelectionne;
-        private string _id;
-        private string _nom;
+
+        private MotifEntree? _motifSelectionne;
+        private string? _id;
+        private DateTime _date;
+        private string? _nom;
         private string _description;
         private string _message;
-        private bool _panneau;
+        private string _title;
 
-        private ObservableCollection<Vaccin> _lesVaccins;
-        private IWindowService _windowService;
         public ICommand AjouteCommand { get; }
         public ICommand SupprimerCommand { get; }
         public ICommand NouveauCommand { get; }
-        public ICommand OuvrirDetailCommand { get; }
 
-        public VaccinViewModel(IWindowService windowService)
+        public MotifEntreeDetailViewModel(MotifEntree motifEntree)
         {
-            _windowService = windowService;
-            _lesVaccins = new ObservableCollection<Vaccin>(AllVaccin.StockVaccins.Values);
-            _panneau = false;
+            _motifSelectionne = motifEntree;
             _message = string.Empty;
-            _description = string.Empty;
-            _id = string.Empty;
-            _nom = string.Empty;
+            _id =motifEntree != null ? motifEntree.Id: string.Empty;
+            _date = motifEntree != null ? motifEntree.DateCreation : DateTime.Now;
+            _nom = motifEntree != null ? motifEntree.Libele : string.Empty;
+            _description = motifEntree != null ? motifEntree.Details : string.Empty;
 
-            NouveauCommand = new RelayCommand(_ => NouveauVaccin(), _ => true);
+            _title = motifEntree != null ? $"FICHE DE MOTIF N° [ {motifEntree.Id} ]"  : "CREATION DE MOTIF";
+
+            NouveauCommand = new RelayCommand(_ => NouveauMotifEntree(), _ => true);
             AjouteCommand = new RelayCommand(_ => AjouteOuMettreAJour(), _ => PeutEnregistrer());
-            SupprimerCommand = new RelayCommand(_ => SupprimerVaccin(), _ => this.VaccinSelectionne != null);
-            OuvrirDetailCommand = new RelayCommand(_ => OuvrirDetail(), _ => this.VaccinSelectionne != null);
-
+            SupprimerCommand = new RelayCommand(_ => SupprimerMotifEntree(), _ => this.MotifSelectionne != null);
 
         }
 
@@ -50,6 +47,11 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
         {
             get { return _id; }
             set { _id = value; OnPropertyChanged(); }
+        }
+        public DateTime Date
+        {
+            get { return _date; }
+            set { _date = value; OnPropertyChanged(); }
         }
         public string Nom
         {
@@ -61,35 +63,28 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
             get { return _description; }
             set { _description = value; OnPropertyChanged(); }
         }
-        public Vaccin VaccinSelectionne
+        public string Title
         {
-            get { return _vaccinSelectionne; }
+            get { return _title; }
+            set { _title = value; OnPropertyChanged(); }
+        }
+        public MotifEntree MotifSelectionne
+        {
+            get { return _motifSelectionne; }
             set
             {
-                _vaccinSelectionne = value;
+                _motifSelectionne = value;
                 OnPropertyChanged();
 
                 if (value != null)
                 {
-                    Panneau = true;
                     Id = value.Id;
-                    Nom = value.Nom;
-                    Description = value.Description;
+                    Nom = value.Libele;
+                    Description = value.Details;
                     Message = string.Empty;
                 }
             }
         }
-        public bool Panneau
-        {
-            get { return _panneau; }
-            set { _panneau = value; OnPropertyChanged(); }
-        }
-
-        public ObservableCollection<Vaccin> LesVaccins
-        {
-            get { return _lesVaccins; }
-        }
-
 
         public string Message
         {
@@ -97,12 +92,12 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
             set { _message = value; OnPropertyChanged(); }
         }
 
-        private void NouveauVaccin()
+        private void NouveauMotifEntree()
         {
-            VaccinSelectionne = null;
+            MotifSelectionne = null;
             Nom = string.Empty;
-            Id = string.Empty;
             Description = string.Empty;
+            Id = string.Empty;
         }
         private bool PeutEnregistrer()
         {
@@ -115,28 +110,29 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
 
             try
             {
-                if (this.VaccinSelectionne == null)
+                if (this.MotifSelectionne == null)
                 {
                     if (Nom != null)
                     {
-                        Vaccin nouveau = Vaccin.Creer(Nom, Description);
-                        if (Vaccin.Save(nouveau) == 1)
+                        MotifEntree nouveau = MotifEntree.Creer(Nom, Description);
+                        if (MotifEntree.Save(nouveau) == 1)
                         {
+                            AllMotifsEntrees.DB_Sync();
                             this.Message = LesMessage.SuccesAjout;
-                            LesVaccins.Add(nouveau);
                         }
 
                     }
                 }
                 else
                 {
-                    if (this.VaccinSelectionne.Modifier(Nom, Description) == 1)
+                    if (this.MotifSelectionne.Update(Nom, Description) == 1)
                     {
+                        AllMotifsEntrees.DB_Sync();
                         this.Message = LesMessage.SuccesMaj;
                     }
 
                 }
-                NouveauVaccin();
+                NouveauMotifEntree();
             }
             catch (Exception ex)
             {
@@ -145,22 +141,21 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
 
 
         }
-        private void SupprimerVaccin()
+        private void SupprimerMotifEntree()
         {
             Message = LesMessage.ErrorSuppression;
 
-            if (this.VaccinSelectionne != null)
+            if (this.MotifSelectionne != null)
             {
                 try
                 {
-                    if (Vaccin.Delete(this.VaccinSelectionne) == 1)
+                    if (MotifEntree.Delete(this.MotifSelectionne) == 1)
                     {
-                        AllVaccin.DB_Sync();
-                        LesVaccins.Remove(VaccinSelectionne);
+                        AllMotifsEntrees.DB_Sync();
 
                         Message = LesMessage.SuccesSuppression;
 
-                        NouveauVaccin();
+                        NouveauMotifEntree();
                     }
                 }
                 catch (Exception ex)
@@ -170,12 +165,6 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
 
             }
         }
-
-        private void OuvrirDetail()
-        {
-            var vm = new VaccinDetailViewModel(VaccinSelectionne);
-            _windowService.OuvrirDetail(vm);
-
-        }
+        
     }
 }

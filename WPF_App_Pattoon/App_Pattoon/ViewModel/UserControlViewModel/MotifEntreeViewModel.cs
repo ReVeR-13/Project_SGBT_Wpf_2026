@@ -8,11 +8,13 @@ using System.Windows.Input;
 using Wpf_App_Pattoon_Animalerie.Commands;
 using Wpf_App_Pattoon_Animalerie.Modele;
 using Wpf_App_Pattoon_Animalerie.Service;
+using Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details;
 
 namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
 {
     public class MotifEntreeViewModel : BaseViewModel
     {
+        IWindowService _windowService;
         private MotifEntree _motifSelectionne;
         private string _id;
         private string _nom;
@@ -24,9 +26,11 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
         public ICommand AjouteCommand { get; }
         public ICommand SupprimerCommand { get; }
         public ICommand NouveauCommand { get; }
+        public ICommand OuvrirDetailCommand { get; }
 
-        public MotifEntreeViewModel()
+        public MotifEntreeViewModel(IWindowService windowService)
         {
+            _windowService = windowService;
             _lesMotifs = new ObservableCollection<MotifEntree>(AllMotifsEntrees.LesStocks.Values);
             _message = string.Empty;
             _id = string.Empty;
@@ -36,7 +40,7 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
             NouveauCommand = new RelayCommand(_ => NouveauMotifEntree(), _ => true);
             AjouteCommand = new RelayCommand(_ => AjouteOuMettreAJour(), _ => PeutEnregistrer());
             SupprimerCommand = new RelayCommand(_ => SupprimerMotifEntree(), _ => this.MotifSelectionne != null);
-
+            OuvrirDetailCommand = new RelayCommand(_ => OuvrirDetail(), _ => this.MotifSelectionne != null);
 
         }
 
@@ -159,6 +163,12 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
                 }
 
             }
+        }
+        private void OuvrirDetail()
+        {
+            var vm = new MotifEntreeDetailViewModel(MotifSelectionne);
+            _windowService.OuvrirDetail(vm);
+
         }
     }
 }
