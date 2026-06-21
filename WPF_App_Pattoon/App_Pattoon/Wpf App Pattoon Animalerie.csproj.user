@@ -2,6 +2,12 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
+    <Compile Update="View\UserControlView\AccueilView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\AdoptionView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\UserControlView\AnimalView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -17,7 +23,52 @@
     <Compile Update="View\UserControlView\DemandeView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\UserControlView\Details\Details_AbriView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\Details\Details_AccueilView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\Details\Details_AdoptionView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\Details\Details_AnimalView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\Details\Details_CompatibiliteView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\UserControlView\Details\Details_ContactView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\Details\Details_CoulleurView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\Details\Details_DemandeView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\Details\Details_HistoriqueAnimal.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\Details\Details_MotifEntreeView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\Details\Details_MotifSortieView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\Details\Details_SortieView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\Details\Details_TypeAnimalView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\Details\Details_TypeContactView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\Details\Details_VaccinView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\UserControlView\Details\Detail_EntreeView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="View\UserControlView\EntreeView.xaml.cs">

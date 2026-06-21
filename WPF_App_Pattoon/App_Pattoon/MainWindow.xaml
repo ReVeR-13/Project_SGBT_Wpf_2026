@@ -9,10 +9,11 @@
     <Grid Background="#FF06435D">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="59*"/>
+
+            <ColumnDefinition Width="71*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#00000000" Offset="0"/>
@@ -42,7 +43,8 @@
                     <Button Content="Motif Sortie" Command="{Binding MotifSortieCommande}" Height="24" Width="140" Margin="0,1" Background="#FF02374E" Foreground="White" BorderBrush="{x:Null}"/>
                     <Button Content="Entree" Command="{Binding EntreeCommande}" Height="24" Width="140" Margin="0,1" Background="#FF02374E" Foreground="White" BorderBrush="{x:Null}"/>
                     <Button Content="Sortie" Command="{Binding SortieCommande}" Height="24" Width="140" Margin="0,1" Background="#FF02374E" Foreground="White" BorderBrush="{x:Null}"/>
-                    <Button Content="Page 3" Command="{Binding ShowPage2Commande}" Height="24" Width="140" Margin="0,1" Background="#FF02374E" Foreground="White" BorderBrush="{x:Null}"/>
+                    <Button Content="Adoption" Command="{Binding AdoptionCommande}" Height="24" Width="140" Margin="0,1" Background="#FF02374E" Foreground="White" BorderBrush="{x:Null}"/>
+                    <Button Content="Accueil" Command="{Binding AccueilCommande}" Height="24" Width="140" Margin="0,1" Background="#FF02374E" Foreground="White" BorderBrush="{x:Null}"/>
                 </StackPanel>
             </StackPanel>
 
@@ -50,7 +52,7 @@
 
         <ContentControl Grid.Column="1" Margin="35,33,35,32" 
                     Content="{Binding VueCourrante}" 
-                    Style="{StaticResource AnimatedContentControl}"/>
+                    Style="{StaticResource AnimatedContentControl}" Background="White" Grid.ColumnSpan="2"/>
 
 
 

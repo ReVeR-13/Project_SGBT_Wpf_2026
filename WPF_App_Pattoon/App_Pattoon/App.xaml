@@ -8,6 +8,7 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
 
+
         <Style x:Key="AnimatedContentControl" TargetType="ContentControl">
             <Setter Property="Template">
                 <Setter.Value>
@@ -89,6 +90,14 @@
 
         <DataTemplate DataType="{x:Type vm:MotifSortieViewModel}">
             <views:MotifSortieView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:AdoptionViewModel}">
+            <views:AdoptionView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:AccueilViewModel}">
+            <views:AccueilView/>
         </DataTemplate>
 
     </Application.Resources>
