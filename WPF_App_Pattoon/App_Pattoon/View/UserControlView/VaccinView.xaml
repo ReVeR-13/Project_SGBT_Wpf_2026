@@ -6,84 +6,117 @@
              xmlns:local="clr-namespace:Wpf_App_Pattoon_Animalerie.View.UserControlView"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="#FF1D6390" >
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="301*"/>
-            <ColumnDefinition Width="301*"/>
-        </Grid.ColumnDefinitions>
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="11*"/>
+            <RowDefinition Height="79*"/>
+        </Grid.RowDefinitions>
 
-
-
-        <StackPanel VerticalAlignment="Center" MinHeight="300" Height="Auto" Orientation="Horizontal">
-
-            <DataGrid ItemsSource="{Binding LesVaccins}" 
-                  SelectedItem="{Binding VaccinSelectionne}"
-                  SelectionMode="Single" SelectionUnit="FullRow" IsReadOnly="True"
-                  AutoGenerateColumns="True" HeadersVisibility="Column" 
-                  FontFamily="Lucida Sans" 
-                  VerticalContentAlignment="Center" 
-                  Background="{x:Null}" 
-                  Foreground="#FF3D5E82" 
-                  FontSize="14" 
-                  IsSynchronizedWithCurrentItem="True"
-                  HorizontalGridLinesBrush="#FFADABAB" 
-                  VerticalGridLinesBrush="#FF9E9E9E" 
-                  AlternatingRowBackground="#FFE6F5FF" 
-                  RowBackground="White" 
-                  Width="Auto" MinWidth="500"/>
-
+        <StackPanel Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical">
+            <TextBlock TextWrapping="Wrap" 
+                       Text="LES VACCINS"
+                       FontSize="20" Foreground="White"/>
+            <TextBlock TextWrapping="Wrap" 
+                       Text="{Binding Message}"
+                       FontSize="16"/>
         </StackPanel>
 
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="1" Background="#BF25526F"  ShowGridLines="True" Width="Auto" >
+            <StackPanel  Grid.Column="0">
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="80"/>
-                <RowDefinition Height="Auto" MinHeight="80"/>
-                <RowDefinition Height="Auto" MinHeight="220"/>
-                <RowDefinition Height="50" MinHeight="0"/>
-            </Grid.RowDefinitions>
+                <DataGrid ItemsSource="{Binding LesVaccins}" 
+                            SelectedItem="{Binding VaccinSelectionne}"
+                            SelectionMode="Single" SelectionUnit="FullRow" IsReadOnly="True"
+                            AutoGenerateColumns="True" HeadersVisibility="Column" 
+                            FontFamily="Lucida Sans" 
+                            VerticalContentAlignment="Center" 
+                            Background="{x:Null}" 
+                            Foreground="#FF3D5E82" 
+                            FontSize="14" 
+                            IsSynchronizedWithCurrentItem="True"
+                            HorizontalGridLinesBrush="#FFADABAB" 
+                            VerticalGridLinesBrush="#FF9E9E9E" 
+                            AlternatingRowBackground="#FFE6F5FF" 
+                            RowBackground="White" 
+                            Width="Auto" MinWidth="500">
+                    <DataGrid.InputBindings>
+                        <MouseBinding MouseAction="LeftDoubleClick"
+            Command="{Binding OuvrirDetailCommand}"
+            CommandParameter="{Binding VaccinSelectionne}"/>
 
-            <StackPanel Grid.Row="0" Margin="10" Width="Auto">
-                <TextBlock Text="{Binding Id}" FontSize="20"  />
-            </StackPanel>
-
-            <StackPanel Grid.Row="1" Margin="10" HorizontalAlignment="Left" Width="Auto">
-                <TextBlock Text="{Binding Message}" FontSize="16" Margin="10" Width="Auto"/>
-            </StackPanel>
-
-            <StackPanel Grid.Row="2" Margin="10" Orientation="Vertical" HorizontalAlignment="Left" Width="Auto">
-                <TextBlock Text="Libele" FontSize="14" Foreground="#FFC3C3C3"/>
-                <TextBox   Text="{Binding Nom}" Background="{x:Null}" Margin="10"
-                     BorderBrush="#FF8AA1E6" SelectionBrush="#FFFFD74B" SelectionTextBrush="#FFCDE0FF" Height="45" FontSize="16" MinWidth="300" Width="Auto" Foreground="#FFFFF692"/>
-
-                <TextBlock Text="Description" FontSize="14" Width="Auto" Foreground="#FFDEDEDE"/>
-                <TextBox TextWrapping="Wrap" Text="{Binding Description}" Margin="10" Background="{x:Null}"
-                     BorderBrush="#FF8AA1E6" SelectionBrush="#FFFFD74B" SelectionTextBrush="#FFCDE0FF" MinHeight="100" Height="Auto" FontSize="16" MinWidth="300" Width="Auto" Foreground="#FFFFF692"/>
-
-            </StackPanel>
-
-            <StackPanel Grid.Row="3" Margin="0" Orientation="Horizontal" HorizontalAlignment="Left" Width="360">
-                <Button Content="Nouveau"
-            Width="100"
-            Height="35"
-            Margin="10"
-            Command="{Binding NouveauCommand}"/>
-
-                <Button Content="Enregistrer"
-            Width="100"
-            Height="35"
-            Margin="10"
-            Command="{Binding AjouteCommand}"/>
-
-                <Button Content="Supprimer"
-            Width="100" 
-            Height="35"
-            Margin="10"
-            Command="{Binding SupprimerCommand}"/>
+                    </DataGrid.InputBindings>
+                </DataGrid>
 
             </StackPanel>
+
+            <GroupBox Grid.Column="1" Header="Details Rapides" Foreground="#FFFFDE00">
+                <StackPanel Background="#BF25526F"  Width="Auto" >
+
+                    <StackPanel  Margin="10" Width="Auto">
+                        <TextBlock Text="{Binding Id}" FontSize="20"  />
+                    </StackPanel>
+
+                    <StackPanel Margin="10" Width="Auto">
+                        <TextBlock Text="{Binding Message}" FontSize="16" Margin="10" Width="Auto"/>
+                    </StackPanel>
+
+                    <StackPanel   Width="Auto">
+                        <TextBlock Text="Libele" FontSize="14" Foreground="#FFC3C3C3"/>
+                        <TextBox   Text="{Binding Nom}" Background="{x:Null}" Margin="10"
+                                 SelectionBrush="#FFFFD74B" 
+                                   SelectionTextBrush="#FFCDE0FF" 
+                                   Height="40" FontSize="16" 
+                                   Width="Auto" Foreground="#FFFFF692"/>
+
+                        <TextBlock Text="Description" 
+                                   FontSize="14" Width="Auto" 
+                                   Foreground="#FFDEDEDE"/>
+                        <RichTextBox Height="100" Margin="10" Background="{x:Null}" Foreground="#FFFFC806">
+                            <FlowDocument>
+                                <Paragraph>
+                                    <Run Text="{Binding Description}" FontSize="16"/>
+                                </Paragraph>
+                            </FlowDocument>
+                        </RichTextBox>
+                        
+
+                    </StackPanel>
+
+                    <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center" Width="Auto">
+                        <Button Content="Nouveau"
+                                Width="100"
+                                Height="35"
+                                Margin="10"
+                                Command="{Binding NouveauCommand}"/>
+
+                        <Button Content="Enregistrer"
+                                Width="100"
+                                Height="35"
+                                Margin="10"
+                                Command="{Binding AjouteCommand}"/>
+
+                        <Button Content="Supprimer"
+                                Width="100" 
+                                Height="35"
+                                Margin="10"
+                                Command="{Binding SupprimerCommand}"/>
+
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+
         </Grid>
+
+
+        
+
+
+        
 
     </Grid>
 </UserControl>

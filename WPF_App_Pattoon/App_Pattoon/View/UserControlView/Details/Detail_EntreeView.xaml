@@ -1,0 +1,118 @@
+﻿<UserControl x:Class="Wpf_App_Pattoon_Animalerie.View.UserControlView.Details.Detail_EntreeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Wpf_App_Pattoon_Animalerie.View.UserControlView.Details"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Background="White" Width="400">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60*"/>
+            <RowDefinition Height="417*"/>
+            <RowDefinition Height="73*"/>
+        </Grid.RowDefinitions>
+
+
+        <StackPanel Grid.Row="0">
+            <TextBlock TextWrapping="Wrap" 
+                   Text="{Binding Title}"
+                   FontSize="18"
+                   HorizontalAlignment="Center"/>
+            <TextBlock TextWrapping="Wrap" Text="{Binding DateCreation}" 
+                   Foreground="#FF005BA2"
+                   HorizontalAlignment="Center"/>
+
+            <TextBlock TextWrapping="Wrap" 
+                   Text="{Binding Message}" Foreground="Red"
+                   HorizontalAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1">
+
+            <TextBlock TextWrapping="Wrap" 
+                   Text="Statut"
+                   HorizontalAlignment="Center"/>
+
+            <StackPanel Height="60" Background="#FFEAEAEA" Margin="0,0,0,30">
+                <TextBlock TextWrapping="Wrap" Height="20" 
+                        Text="{Binding InfoEtape}" 
+                        FontWeight="Bold"
+                        FontSize="18"
+                        HorizontalAlignment="Center" Foreground="#FF0065D6"/>
+
+                <TextBlock Text="{Binding DemandeSelectionne}" 
+                       HorizontalAlignment="Center"
+                       Padding="10,0"
+                       Foreground="#FFFF7500"/>
+                <TextBlock Text="{Binding MotifSelectionne}" 
+                       HorizontalAlignment="Center"
+                       Padding="10,0"
+                       Foreground="#FFFF7500"/>
+            </StackPanel>
+
+            <TextBlock Text="Choix Demande" 
+                 HorizontalAlignment="Center"
+                 Margin="0,15,0,5" Padding="10,0"
+                 Background="#FFFFE896" 
+                 Foreground="#FF0083AF"/>
+
+            <DataGrid Height="Auto" MaxHeight="150" 
+                  ItemsSource="{Binding LesDemandes}"
+                  SelectedItem="{Binding DemandeSelectionne}"/>
+
+            <TextBlock Text="Choix Motif" 
+                 HorizontalAlignment="Center"
+                 Margin="0,15,0,5" Padding="10,0"
+                 Background="#FFFFE896" 
+                 Foreground="#FF0083AF"/>
+
+            <ListBox Height="100" 
+                 ItemsSource="{Binding LesMotifs}"
+                 SelectedItem="{Binding MotifSelectionne}"/>
+
+            <TextBlock Text="Info supplementaire" 
+                 HorizontalAlignment="Center"
+                 Margin="0,15,0,5" Padding="10,0"
+                 Background="#FFFFE896" 
+                 Foreground="#FF0083AF"/>
+
+            <GroupBox Height="100" Header="GroupBox">
+                <TextBox TextWrapping="Wrap" Text="{Binding Description}"/>
+            </GroupBox>
+
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" 
+        Orientation="Horizontal" 
+        HorizontalAlignment="Center" 
+        VerticalAlignment="Center" Height="40" Width="330">
+
+            <Button Content="Annuler" 
+        Command="{Binding NouveauCommand}" 
+        FontSize="16"
+        Height="30" Width="100"
+        Margin="5"
+        Background="#FFFFFFE7" Foreground="#FF118BCA" 
+        BorderBrush="#FFFFE66F"/>
+
+            <Button Content="Enregistrer" 
+        Command="{Binding EnregistreCommand}" 
+        FontSize="16"
+        Height="30" Width="100"
+        Margin="5"
+        Background="#FFECFFE7" Foreground="#FF11CA25" BorderBrush="#FF6FFF71"/>
+
+            <Button Content="Supprimer" 
+        Command="{Binding DeleteCommand}" 
+        FontSize="16"
+        Height="30" Width="100"
+        Margin="5"
+        Background="#FFFFE7E7" Foreground="#FFCA1111" BorderBrush="#FFFF6F6F"/>
+
+        </StackPanel>
+
+
+
+    </Grid>
+</UserControl>

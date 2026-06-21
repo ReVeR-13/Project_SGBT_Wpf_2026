@@ -6,10 +6,33 @@
              xmlns:local="clr-namespace:Wpf_App_Pattoon_Animalerie.View.UserControlView"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="#FFFF7D32">
-        <TextBlock Text="{Binding Message}"
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="71*"/>
+            <RowDefinition Height="11*"/>
+        </Grid.RowDefinitions>
+
+
+
+        <TextBlock Text="LES ANIMAUX"
                HorizontalAlignment="Center"
                VerticalAlignment="Center"
-               FontSize="30"/>
+               FontSize="30" Height="40" Grid.Row="0" Foreground="#FF009841"/>
+
+        <DataGrid ItemsSource="{Binding LesAnimaux}"
+                  SelectedItem="{Binding AnimalSelectionne}"
+                  SelectionMode="Single" 
+                  SelectionUnit="FullRow" 
+                  IsReadOnly="True" Grid.Row="1">
+            <DataGrid.InputBindings>
+                <MouseBinding MouseAction="LeftDoubleClick"
+                        Command="{Binding OuvrirDetailCommand}"
+                        CommandParameter="{Binding AnimalSelectionne}"/>
+
+            </DataGrid.InputBindings>
+        </DataGrid>
+        <Button Content="Nouveau"
+                Command="{Binding NouveauCommand}" Grid.Row="2"/>
     </Grid>
 </UserControl>

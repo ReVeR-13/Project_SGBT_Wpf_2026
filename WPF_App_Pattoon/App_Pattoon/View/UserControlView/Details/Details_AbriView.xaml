@@ -1,0 +1,112 @@
+﻿<UserControl x:Class="Wpf_App_Pattoon_Animalerie.View.UserControlView.Details.Details_AbriView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Wpf_App_Pattoon_Animalerie.View.UserControlView.Details"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Background="White" Width="400">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60*"/>
+            <RowDefinition Height="417*"/>
+            <RowDefinition Height="73*"/>
+        </Grid.RowDefinitions>
+
+
+        <StackPanel Grid.Row="0">
+            <TextBlock TextWrapping="Wrap" 
+               Text="{Binding Title}"
+               FontSize="18"
+               HorizontalAlignment="Center"/>
+            <TextBlock TextWrapping="Wrap" Text="{Binding DateCreation}" 
+               Foreground="#FF005BA2"
+               HorizontalAlignment="Center"/>
+
+            <TextBlock TextWrapping="Wrap" 
+               Text="{Binding Message}" Foreground="Red"
+               HorizontalAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1">
+
+            <TextBlock TextWrapping="Wrap" 
+               Text="Info Generale"
+               HorizontalAlignment="Center"/>
+
+            <StackPanel Height="40" Background="#FFEAEAEA" Margin="0,0,0,20">
+                <TextBlock Text="{Binding AbriSelectionne}" 
+                   HorizontalAlignment="Center"
+                   Padding="10,0"
+                   Foreground="#FFFF7500"/>
+                <TextBlock Text="{Binding StatutSelectionne}" 
+                   HorizontalAlignment="Center"
+                   Padding="10,0"
+                   Foreground="#FFFF7500"/>
+            </StackPanel>
+
+            <Label Content="Nom" 
+             HorizontalAlignment="Center"
+             Margin="0,10,0,5" Padding="10,0"
+             Background="#FFFFE896" 
+             Foreground="#FF0083AF"/>
+            <StackPanel>
+                <TextBox TextWrapping="Wrap" Text="{Binding Nom}" 
+                         Height="30" 
+                         FontSize="16"/>
+            </StackPanel>
+
+            <Label Content="Statut" 
+             HorizontalAlignment="Center"
+             Margin="0,15,0,5" Padding="10,0"
+             Background="#FFFFE896" 
+             Foreground="#FF0083AF"/>
+            <ComboBox Height="30" 
+             ItemsSource="{Binding LesStatutAbris}"
+             SelectedItem="{Binding StatutSelectionne}"/>
+
+            <Label Content="Info supplementaire" 
+             HorizontalAlignment="Center"
+             Margin="0,15,0,5" Padding="10,0"
+             Background="#FFFFE896" 
+             Foreground="#FF0083AF"/>
+            <GroupBox Height="100" Header="Description">
+                <TextBox TextWrapping="Wrap" Text="{Binding Description}"/>
+            </GroupBox>
+            
+
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Center" Height="40" Width="330">
+
+            <Button Content="Annuler" 
+                    Command="{Binding NouveauCommand}" 
+                    FontSize="16"
+                    Height="30" Width="100"
+                    Margin="5"
+                    Background="#FFFFFFE7" Foreground="#FF118BCA" 
+                    BorderBrush="#FFFFE66F"/>
+
+            <Button Content="Enregistrer" 
+                    Command="{Binding AjouteCommand}" 
+                    FontSize="16"
+                    Height="30" Width="100"
+                    Margin="5"
+                    Background="#FFECFFE7" Foreground="#FF11CA25" BorderBrush="#FF6FFF71"/>
+
+            <Button Content="Supprimer" 
+                    Command="{Binding SupprimerCommand}" 
+                    FontSize="16"
+                    Height="30" Width="100"
+                    Margin="5"
+                    Background="#FFFFE7E7" Foreground="#FFCA1111" BorderBrush="#FFFF6F6F"/>
+
+        </StackPanel>
+
+
+
+    </Grid>
+</UserControl>

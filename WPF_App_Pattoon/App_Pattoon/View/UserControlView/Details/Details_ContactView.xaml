@@ -54,7 +54,7 @@
 
                     <StackPanel Grid.Column="1" Margin="10,10,10,10">
 
-                        <Label Content="Nom" Foreground="#FFE27315"/>
+                        <Label Content="Nom*" Foreground="#FFE27315"/>
                         <TextBox TextWrapping="Wrap" Text="{Binding Nom}" 
                          Grid.Column="1" Height="40"  
                          Padding="10,5" FontSize="18"
@@ -74,7 +74,7 @@
                          SelectionTextBrush="#FFFFFCB9" 
                          SelectionBrush="#FFFFF614"/>
 
-                        <Label Content="Niss" Margin="0,10,0,0" Foreground="#FFE27315"/>
+                        <Label Content="Niss*" Margin="0,10,0,0" Foreground="#FFE27315"/>
                         <TextBox TextWrapping="Wrap" Text="{Binding Niss}" 
                          Grid.Column="1" Height="40"  
                          Padding="10,5" FontSize="18"
@@ -84,10 +84,10 @@
                          SelectionTextBrush="#FFFFFCB9" 
                          SelectionBrush="#FFFFF614"/>
 
-                        <Label Content="Date de naissance" Margin="0,10,0,0" Foreground="#FFE27315"/>
+                        <Label Content="Date de naissance*" Margin="0,10,0,0" Foreground="#FFE27315"/>
                         <DatePicker Grid.Column="1" Height="40"  
                                     Padding="10,4" FontSize="18"
-                                    Text="{Binding DateNaissance}"
+                                    SelectedDate="{Binding DateNaissance}"
                                     BorderBrush="{x:Null}" 
                                     Foreground="#FF02334C" 
                                     Background="#FFF7F7F7"/>
@@ -111,7 +111,7 @@
                     <StackPanel Grid.Column="0" Margin="0,0,10,0">
                         <TextBlock TextWrapping="Wrap" Text="CONTACT" Margin="0,0,0,10"/>
 
-                        <Label Content="Gsm" Margin="0,10,0,0" Foreground="#FFE27315"/>
+                        <Label Content="Gsm*" Margin="0,10,0,0" Foreground="#FFE27315"/>
                         <TextBox TextWrapping="Wrap" Text="{Binding Gsm}" 
                          Grid.Column="1" Height="40"  
                          Padding="10,5" FontSize="18"
@@ -129,7 +129,7 @@
                          SelectionTextBrush="#FFFFFCB9" 
                          SelectionBrush="#FFFFF614" Foreground="#FF097286"/>
 
-                        <Label Content="e-mail" Margin="0,10,0,0" Foreground="#FFE27315"/>
+                        <Label Content="e-mail*" Margin="0,10,0,0" Foreground="#FFE27315"/>
                         <TextBox TextWrapping="Wrap" Text="{Binding Mail}" 
                          Grid.Column="1" Height="40"  
                          Padding="10,5" FontSize="18"
@@ -178,17 +178,29 @@
 
                         <Label Content="Roles" Margin="0,10,0,0" Foreground="#FFE27315"/>
                         <ListBox Height="132" ItemsSource="{Binding MesRoles}" 
-                         Background="#FF0DAFDA" 
-                         BorderBrush="{x:Null}" 
-                         Foreground="White" 
-                         FontSize="16"/>
+                                 SelectedItem="{Binding ContactRoleSelected}"
+                                 Background="#FFEDEDED" 
+                                 BorderBrush="{x:Null}" 
+                                 Foreground="#FF0A7F8E" 
+                                 FontSize="16">
 
-                        <Button Content="Add Role" Margin="0,10"
-                        Command="{Binding AddRoleCommand}"
-                        Grid.Column="1" Height="34"  
-                        Padding="10,5" FontSize="16"
-                        Foreground="#FFFFBE0B" Background="#FF83836F" BorderBrush="#FFFFBE0B"/>
+                        </ListBox>
 
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center"  VerticalAlignment="Center">
+                            
+                            <Button Content="Add Role" Margin="10"
+                                    Command="{Binding AddRoleCommand}"
+                                    Height="34"  Width="100"
+                                    Padding="10,5" FontSize="14"
+                                    Foreground="#FF5E8C00" Background="#FFD4FFB3" BorderBrush="#FF5AFF00"/>
+
+                            <Button Content="Supprimer" Margin="10"
+                                    Command="{Binding DeleteRoleCommand}"
+                                    Width="100" Height="34"  
+                                    Padding="10,5" FontSize="14"
+                                    Foreground="#FFB90606" Background="#FFFDBFB6" BorderBrush="#FFFF430B"/>
+
+                        </StackPanel>
 
                     </StackPanel>
 
@@ -203,7 +215,7 @@
                 <StackPanel Margin="0,40">
 
                     <Button Content="Voir les roles" 
-                            Command="{Binding AfficherVaccinsCommand}" 
+                            Command="{Binding GotoRoleCommand}" 
                             FontSize="16"
                             Height="40" Margin="10" 
                             Background="#FFFFDE78" Foreground="#FF2D889A" BorderBrush="{x:Null}"/>
@@ -213,20 +225,20 @@
 
                 <StackPanel Margin="0,30">
                     <Button Content="Annuler" 
-                            Command="{Binding AfficherVaccinsCommand}" 
+                            Command="{Binding AnnulerCommand}" 
                             FontSize="16"
                             Height="40" 
                             Margin="10"
                             Background="#FFFFFFE7" Foreground="#FF118BCA" BorderBrush="#FFFFE66F"/>
 
                     <Button Content="Enregistrer" 
-                            Command="{Binding AfficherVaccinsCommand}" 
+                            Command="{Binding EnregistrerCommand}" 
                             FontSize="16"
                             Height="40"  Margin="10"
                             Background="#FFD1FFCB" Foreground="#FF2D889A" BorderBrush="#FFA0FF00"/>
 
                     <Button Content="Supprimer" 
-                            Command="{Binding AfficherVaccinsCommand}" 
+                            Command="{Binding SupprimerCommand}" 
                             FontSize="16"
                             Height="40" 
                             Margin="10"

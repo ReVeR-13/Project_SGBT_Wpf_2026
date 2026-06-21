@@ -6,27 +6,32 @@
              xmlns:local="clr-namespace:Wpf_App_Pattoon_Animalerie.View.UserControlView"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="#FF1A687D" Margin="0,0,-85,10">
+    <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="97*"/>
             <RowDefinition Height="284*"/>
-            <RowDefinition Height="69*"/>
         </Grid.RowDefinitions>
 
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Height="Auto" Width="Auto">
-
+            <TextBlock TextWrapping="Wrap" Text="LES SORTIES"
+                       FontSize="20" Foreground="White"/>
             <TextBlock Text="{Binding Message}"
                  HorizontalAlignment="Center"
                  VerticalAlignment="Center"
                  FontSize="16" Height="38" Width="0"/>
 
+
         </StackPanel>
 
-        <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Horizontal"
-             MinHeight="250" MinWidth="500" Height="Auto" Width="Auto">
+        <Grid Grid.Row="1" 
+             Height="Auto" Width="Auto">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="13*"/>
+                <ColumnDefinition Width="7*"/>
+            </Grid.ColumnDefinitions>
 
-            <DataGrid ItemsSource="{Binding LesSorties}" 
-                 SelectedItem="{Binding SortieSelectionne}" Margin="10,0"
+            <DataGrid Grid.Column="0" ItemsSource="{Binding LesSorties}" 
+                 SelectedItem="{Binding SortieSelectionne}" Margin="10,0,10,0"
                  SelectionMode="Single" SelectionUnit="FullRow" IsReadOnly="True"
                  AutoGenerateColumns="True" HeadersVisibility="Column" 
                  FontFamily="Lucida Sans" 
@@ -39,23 +44,37 @@
                  VerticalGridLinesBrush="#FF9E9E9E" 
                  AlternatingRowBackground="#FFE6F5FF" 
                  RowBackground="White" 
-                 Width="Auto" MinWidth="500"/>
+                 Width="Auto">
 
-            <StackPanel Height="264" Width="350" Margin="10,0">
+                <DataGrid.InputBindings>
+                    <MouseBinding MouseAction="LeftDoubleClick"
+                                    Command="{Binding OuvrirDetailCommand}"
+                                    CommandParameter="{Binding SortieSelectionne}"/>
+
+                </DataGrid.InputBindings>
+            </DataGrid>
+
+            <StackPanel Grid.Column="1">
 
                 <StackPanel>
                     <TextBlock Text="{Binding Id}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Vertical" MinHeight="150" Margin="10">
-                    <TextBlock Text="Demande Id" FontSize="14"/>
+                    <TextBlock Text="Demande Id" FontSize="14" Foreground="#FFF4FF33"/>
                     <TextBox Text="{Binding DemandeId}" Width="Auto" MinWidth="150" FontSize="20" Margin="0,5"/>
 
-                    <TextBlock Text="Motif" FontSize="14"/>
+                    <TextBlock Text="Motif" FontSize="14" Foreground="#FFF4FF33"/>
                     <TextBox Text="{Binding MotifId}" Width="Auto" MinWidth="150" FontSize="20" Margin="0,5"/>
 
-                    <TextBlock Text="Description" FontSize="14"/>
-                    <TextBox Text="{Binding Description}" Width="Auto" MinWidth="150" FontSize="20" Margin="0,5"/>
+                    <TextBlock Text="Description" FontSize="14" Foreground="#FFF4FF33"/>
+                    <RichTextBox Height="100" Margin="0,5">
+                        <FlowDocument>
+                            <Paragraph>
+                                <Run Text="{Binding Description}" FontSize="16"/>
+                            </Paragraph>
+                        </FlowDocument>
+                    </RichTextBox>
 
                 </StackPanel>
 
@@ -81,7 +100,7 @@
 
             </StackPanel>
 
-        </StackPanel>
+        </Grid>
 
 
 

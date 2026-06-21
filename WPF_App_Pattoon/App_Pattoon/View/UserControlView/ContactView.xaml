@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Wpf_App_Pattoon_Animalerie.View.UserControlView"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="#FF18406D">
+    <Grid Background="White">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -14,7 +14,7 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Contact" Margin="10"
+        <TextBlock Text="LES CONTACTS" Margin="10"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 FontSize="30"/>
@@ -46,16 +46,10 @@
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" 
                 HorizontalAlignment="Center"
-                VerticalAlignment="Center">
+                VerticalAlignment="Center" Height="60">
 
             <Button Content="Nouveau"
                 Command="{Binding NouveauCommand}"
-                Width="100"
-                Height="35"
-                Margin="10"/>
-
-            <Button Content="Supprimer"
-                Command="{Binding TypesCommand}"
                 Width="100"
                 Height="35"
                 Margin="10"/>

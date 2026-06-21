@@ -1,0 +1,293 @@
+﻿<UserControl x:Class="Wpf_App_Pattoon_Animalerie.View.UserControlView.Details.Details_DemandeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Wpf_App_Pattoon_Animalerie.View.UserControlView.Details"
+             mc:Ignorable="d"
+             
+             MinWidth="1000" MinHeight="700">
+    <Grid Background="#FFF9F9F9">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="41*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" 
+                    Orientation="Vertical"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+
+            <TextBlock Text="{Binding Title}"
+                       Width="Auto"
+                       Height="30" 
+                       FontSize="18"/>
+            
+            <TextBlock Text="{Binding Message}"
+                       FontSize="16"
+                       Width="Auto"
+                       Height="18" Foreground="Red"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="85*"/>
+                <ColumnDefinition Width="53*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" >
+
+                <StackPanel Height="34" Background="#FFEEFF87">
+                    <TextBlock Text="{Binding InfoEtape}"
+                               FontSize="16"
+                               Width="Auto" Height="Auto"
+                               HorizontalAlignment="Center"
+                               Foreground="#FF063C5F"/>
+                </StackPanel>
+                
+                
+                <GroupBox Height="130" Header="Type de Demande">
+                    <ListBox ItemsSource="{Binding LesTypes}"
+                             SelectedItem="{Binding TypeSelectionne}" Margin="0,0,329,0"/>
+                </GroupBox>
+
+                <GroupBox Height="180" Header="Selection Contact">
+
+                    <StackPanel Orientation="Horizontal" 
+                                Height="Auto" Width="Auto" HorizontalAlignment="Left">
+
+                        <DataGrid ItemsSource="{Binding LesContacts}"
+                                  SelectedItem="{Binding ContactSelectionne}"
+                                  SelectionMode="Single" SelectionUnit="FullRow" IsReadOnly="True"
+                                  Width="Auto"
+                                  MinWidth="400"/>
+
+                        <Button Content="+"
+                                FontSize="16"
+                                Width="50" Height="30"/>
+                    </StackPanel>
+
+                </GroupBox>
+                <GroupBox Height="180" Header="Selection Animal">
+
+                    <StackPanel Orientation="Horizontal">
+
+                        <DataGrid ItemsSource="{Binding LesAnimaux}"
+                                  SelectedItem="{Binding AnimalSelectionne}"
+                                  SelectionMode="Single" SelectionUnit="FullRow" IsReadOnly="True"
+                                  Width="Auto"
+                                  MinWidth="400"/>
+
+                        <Button Content="+"
+                                FontSize="16"
+                                Width="50" Height="30"/>
+                    </StackPanel>
+
+                </GroupBox>
+                <GroupBox Header="Decription">
+                    <TextBox Text="{Binding Remarque}" 
+                             TextWrapping="Wrap"
+                             Height="70" Width="Auto"
+                             />
+                </GroupBox>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1">
+                <GroupBox MinHeight="620" Header="Demande">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="328*"/>
+                            <RowDefinition Height="49*"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0">
+
+                            <StackPanel>
+                                <TextBlock TextWrapping="Wrap" 
+                                           Text="{Binding Title}"
+                                           HorizontalAlignment="Center"/>
+
+                                <Border  BorderThickness="1" Height="1" BorderBrush="#FFCA1C1C"/>
+
+                                <TextBlock TextWrapping="Wrap" 
+                                           Text="{Binding StatutDemande}"
+                                           HorizontalAlignment="Center"/>
+
+                            </StackPanel>
+
+                            <StackPanel Margin="10">
+                                <TextBlock TextWrapping="Wrap" 
+                                           Text="{Binding Id}"
+                                           HorizontalAlignment="Center"/>
+
+                                <TextBlock TextWrapping="Wrap" 
+                                           Text="{Binding DateOuverture}"
+                                           HorizontalAlignment="Center"/>
+
+
+                                <TextBlock TextWrapping="Wrap" 
+                                           Text="{Binding TypeSelectionne}"
+                                           HorizontalAlignment="Center"/>
+
+                                <Border  BorderThickness="1" 
+                                         Height="1" Width="200"
+                                         Margin="5"
+                                         BorderBrush="#FF989494"/>
+
+                            </StackPanel>
+
+                            <StackPanel Margin="10">
+
+                                <TextBlock Height="20" Padding="10,0"
+                                           Text="Contact"
+                                           TextDecorations="Underline"
+                                           HorizontalAlignment="Center" 
+                                           Foreground="#FF0A75B9" 
+                                           Background="#FFFFFDC6"/>
+                                
+                                <TextBlock TextWrapping="Wrap" 
+                                           Text="{Binding ContactSelectionne.Id}"
+                                           HorizontalAlignment="Center"/>
+
+                                <TextBlock TextWrapping="Wrap" 
+                                           Text="{Binding ContactSelectionne.Nom}"
+                                           HorizontalAlignment="Center"/>
+
+
+                                <TextBlock TextWrapping="Wrap" 
+                                           Text="{Binding ContactSelectionne.Gsm}"
+                                           HorizontalAlignment="Center"/>
+
+                                <Border  BorderThickness="1" 
+                                         Height="1" Width="200" 
+                                         Margin="5"
+                                         BorderBrush="#FF989494"/>
+
+                            </StackPanel>
+
+                            <StackPanel Margin="10">
+                                <TextBlock Height="20" Padding="10,0"
+                                           Text="Animal"
+                                           TextDecorations="Underline"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center" 
+                                           Foreground="#FF0A75B9" 
+                                           Background="#FFFFFDC6"/>
+
+                                <TextBlock TextWrapping="Wrap" 
+                                           Text="{Binding AnimalSelectionne.Id}"
+                                           HorizontalAlignment="Center"/>
+
+                                <TextBlock TextWrapping="Wrap" 
+                                           Text="{Binding AnimalSelectionne.Nom}"
+                                           HorizontalAlignment="Center"/>
+
+
+                                <TextBlock TextWrapping="Wrap" 
+                                           Text="{Binding AnimalSelectionne.Type.Nom}"
+                                           HorizontalAlignment="Center"/>
+
+                                <Border  BorderThickness="1" 
+                                         Height="1" Width="200"
+                                         Margin="5"
+                                         BorderBrush="#FF989494"/>
+
+                            </StackPanel>
+
+                            <StackPanel Margin="10">
+                                <TextBlock Height="20" Padding="10,0"
+                                           Text="Info Generale"
+                                           TextDecorations="Underline"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center" 
+                                           Foreground="#FF0A75B9" 
+                                           Background="#FFFFFDC6"/>
+                                
+                                <TextBlock TextWrapping="Wrap" 
+                                           Text="{Binding StatutDemande}"
+                                           HorizontalAlignment="Center"/>
+
+                                <TextBlock TextWrapping="Wrap" 
+                                           Text="{Binding Remarque}"
+                                           HorizontalAlignment="Center"/>
+
+
+                                <TextBlock TextWrapping="Wrap" 
+                                           Text="{Binding DateFermeture}"
+                                           HorizontalAlignment="Center"/>
+
+                                <Border  BorderThickness="1" 
+                                         Height="1" Width="200" 
+                                         Margin="5"
+                                         BorderBrush="#FF989494"/>
+
+                            </StackPanel>
+
+                            <StackPanel Margin="10"
+                                        HorizontalAlignment="Center">
+
+                                <TextBlock Height="20" Padding="10,0"
+                                           Text="Etat d avancement"
+                                           TextDecorations="Underline"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center" 
+                                           Foreground="#FF0A75B9" 
+                                           Background="#FFFFFDC6"/>
+                                
+                                <TextBlock TextWrapping="Wrap" 
+                                           Text="{Binding InfosSuivi}"
+                                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" 
+                                    Orientation="Horizontal" 
+                                    HorizontalAlignment="Center" 
+                                    VerticalAlignment="Bottom">
+
+                            <Button Content="Annuler" 
+                                    Command="{Binding AnnulerCommand}" 
+                                    FontSize="16"
+                                    Height="40" Width="100"
+                                    Margin="5"
+                                    Background="#FFFFFFE7" Foreground="#FF118BCA" 
+                                    BorderBrush="#FFFFE66F"/>
+
+                            <Button Content="Enregistrer" 
+                                    Command="{Binding EnregistreCommand}" 
+                                    FontSize="16"
+                                    Height="40" Width="100"
+                                    Margin="5"
+                                    Background="#FFECFFE7" Foreground="#FF11CA25" BorderBrush="#FF6FFF71"/>
+
+                            <Button Content="Supprimer" 
+                                    Command="{Binding SupprimerCommand}" 
+                                    FontSize="16"
+                                    Height="40" Width="100"
+                                    Margin="5"
+                                    Background="#FFFFE7E7" 
+                                    Foreground="#FFCA1111" 
+                                    BorderBrush="#FFFF6F6F"/>
+
+                            <Button Content="{Binding Labeler}" 
+                                    Command="{Binding SuivantCommand}" 
+                                    FontSize="16"
+                                    Height="40" Width="100"
+                                    Margin="5"
+                                    Background="#FF89D6FF" Foreground="#FF002133" 
+                                    BorderBrush="#FF6F92FF"/>
+
+                        </StackPanel>
+
+                    </Grid>
+                </GroupBox>
+            </StackPanel>
+
+
+        </Grid>
+
+
+
+    </Grid>
+</UserControl>

@@ -1,0 +1,343 @@
+﻿<UserControl x:Class="Wpf_App_Pattoon_Animalerie.View.UserControlView.Details.Details_AnimalView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Wpf_App_Pattoon_Animalerie.View.UserControlView.Details"
+             mc:Ignorable="d" 
+             d:DesignHeight="650" d:DesignWidth="1000">
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="9*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <TextBlock TextWrapping="Wrap" 
+                       Text="{Binding Title}" 
+                       FontSize="18"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+            <TextBlock TextWrapping="Wrap" 
+                       Text="{Binding Message}"
+                       HorizontalAlignment="Center"/>
+
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="137*"/>
+                <ColumnDefinition Width="63*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="8*"/>
+                    <RowDefinition Height="5*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="115*"/>
+                        <ColumnDefinition Width="62*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <GroupBox Header="Identité" Padding="10,0" Grid.Column="0" BorderBrush="{x:Null}" >
+
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" >
+                                <Label Content="Créé le" Width="100"/>
+                                <TextBlock TextWrapping="Wrap" 
+                                           Text="{Binding DateCreation}"
+                                           Width="130"
+                                           Padding="10,0"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" >
+                                <Label Content="Type Animal*" Width="100"/>
+                                <ComboBox ItemsSource="{Binding LesTypesAnimal}"
+                                           SelectedItem="{Binding TypeSelectionne}"
+                                           Width="180"
+                                           Padding="10,0"/>
+                                <Button Content="..." 
+                                        Command="{Binding TypeAnimalCommand}"
+                                        Padding="5,0" 
+                                        Margin="5,0" Background="Black" Foreground="White"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" >
+                                <Label Content="Nom*" Width="100"/>
+                                <TextBox TextWrapping="Wrap" 
+                                         Text="{Binding Nom}"
+                                         Width="180"
+                                         Padding="10,0"/>
+
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" >
+                                <Label Content="Couleur*" Width="100"/>
+                                <ComboBox ItemsSource="{Binding LesCouleurs}"
+                                          SelectedItem="{Binding CouleurSelectionne}"
+                                          Width="180"
+                                          Padding="10,0"/>
+                                <Button Content="..."
+                                        Command="{Binding CouleursCommand}"
+                                        Padding="5,0" 
+                                        Margin="5,0" Foreground="White" Background="Black"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" >
+                                <Label Content="Sexe*" Width="100"/>
+                                <ComboBox ItemsSource="{Binding LesSexes}"
+                                          SelectedItem="{Binding SexeSelectionne}"
+                                          Width="180"
+                                          Padding="10,0"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" >
+                                <Label Content="Date Naissance" Width="100"/>
+                                <DatePicker Padding="10,0" 
+                                            Width ="180"
+                                            SelectedDate="{Binding DateNaissance}"/>
+                            </StackPanel>
+
+                            <Border BorderBrush="#FFFFDF08" 
+                                    BorderThickness="1" 
+                                    Height="1" Margin="10"/>
+
+                            <StackPanel Orientation="Horizontal" >
+                                <Label Content="Sterile" Width="100"/>
+                                <CheckBox Width="150" IsChecked="{Binding Sterile}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" >
+                                <Label Content="Date Sterelisation" Width="100"/>
+                                <DatePicker Padding="10,0"
+                                            Width ="180"
+                                            Height="30"
+                                            VerticalAlignment="Center"
+                                            SelectedDate="{Binding DateSterilisation}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" >
+                                <Label Content="Date Deces" Width="100"/>
+                                <DatePicker Padding="10,0"
+                                            Width ="180"
+                                            Height="30"
+                                            VerticalAlignment="Center"
+                                            SelectedDate="{Binding DateDeces}"/>
+                            </StackPanel>
+
+                            <Border BorderBrush="#FFFFDF08" 
+                                    BorderThickness="1" 
+                                    Height="1" Margin="10"/>
+
+                            <StackPanel Orientation="Horizontal" >
+                                <Label Content="Statut" Width="100"/>
+                                <TextBlock Text="{Binding StatutSelectionne}"
+                                           VerticalAlignment="Center"
+                                            Width ="180"
+                                            Padding="10,0"/>
+                                <Button Content="Creer Demande" 
+                                        Command="{Binding EtapeSuivantCommand}"
+                                        Padding="5,0" 
+                                        Margin="5,0" BorderBrush="{x:Null}" Background="#FF012129" Foreground="White"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" >
+                                <Label Content="Abri" Width="100"/>
+                                <ComboBox ItemsSource="{Binding LesAbrisDisponibles}"
+                                          SelectedItem="{Binding AbriSelectionne}"
+                                          Width ="180"
+                                          Height ="30"
+                                          VerticalAlignment="Center"
+                                          Padding="10,0"/>
+                                <Button Content="..." 
+                                        Command="{Binding AbrisCommand}"
+                                        Padding="5,0" 
+                                        Margin="5,0" Background="#FF040000" Foreground="White"
+                                        />
+                            </StackPanel>
+
+                        </StackPanel>
+
+                    </GroupBox>
+
+                    <GroupBox Header="Information supplementaire" Grid.Column="1" BorderBrush="{x:Null}">
+                        <StackPanel>
+
+                            <StackPanel>
+                                <Label Content="Particularité"/>
+                                <RichTextBox Height="100">
+                                    <FlowDocument>
+                                        <Paragraph>
+                                            <Run Text="{Binding Particularite}"/>
+                                        </Paragraph>
+                                    </FlowDocument>
+                                </RichTextBox>
+                            </StackPanel>
+
+                            <StackPanel>
+                                <Label Content="Description"/>
+                                <RichTextBox Height="100">
+                                    <FlowDocument>
+                                        <Paragraph>
+                                            <Run Text="{Binding Description}"/>
+                                        </Paragraph>
+                                    </FlowDocument>
+                                </RichTextBox>
+                            </StackPanel>
+
+                        </StackPanel>
+
+
+                    </GroupBox>
+
+                </Grid>
+
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <StackPanel Width="Auto" MinWidth="200" MaxWidth="330">
+                        <GroupBox  Header="Colories" MinHeight="100" MaxHeight="200">
+                            <ListBox ItemsSource="{Binding LesColorations}"
+                                     SelectedItem="{Binding ColorationSelectionne}">
+
+                            </ListBox>
+                        </GroupBox>
+                        <StackPanel Orientation="Horizontal" 
+                                    HorizontalAlignment="Center">
+                            <Button Content="+"
+                                    Command="{Binding AddColorationCommande}"
+                                    Width="40" 
+                                    Height="20"
+                                    FontSize="14"
+                                    FontWeight="Bold"
+                                    Background="#FFA6FFB7"
+                                    BorderBrush="#FF008859" 
+                                    Foreground="#FF006F3F"/>
+                            
+                            <Button Content="-"
+                                    Command="{Binding RemoveColorationCommande}"
+                                    Width="40" 
+                                    Height="20" 
+                                    FontSize="14"
+                                    FontWeight="Bold"
+                                    Background="Red" 
+                                    BorderBrush="Red" 
+                                    Foreground="White"/>
+                        </StackPanel>
+                        
+
+                    </StackPanel>
+                    
+                    <StackPanel Width="Auto" MinWidth="200" MaxWidth="330">
+                        <GroupBox  Header="Vaccinations" MinHeight="100" MaxHeight="200">
+                            <ListBox ItemsSource="{Binding LesVaccination}"
+                                     SelectedItem="{Binding VaccinationSelectionne}"/>
+                        </GroupBox>
+                        <StackPanel Orientation="Horizontal" 
+                                    HorizontalAlignment="Center">
+                            <Button Content="+"
+                                    Command="{Binding AddVaccinationCommande}"
+                                    Width="40" 
+                                    Height="20"
+                                    FontSize="14"
+                                    FontWeight="Bold"
+                                    Background="#FFA6FFB7"
+                                    BorderBrush="#FF008859" 
+                                    Foreground="#FF006F3F"/>
+
+                            <Button Content="-"
+                                    Command="{Binding RemoveVaccinationCommande}"
+                                    Width="40" 
+                                    Height="20" 
+                                    FontSize="14"
+                                    FontWeight="Bold"
+                                    Background="Red" 
+                                    BorderBrush="Red" 
+                                    Foreground="White"/>
+                        </StackPanel>
+
+                    </StackPanel>
+
+
+                    <StackPanel Width="Auto" MinWidth="200" MaxWidth="330">
+                        <GroupBox  Header="Comptibilités" MinHeight="100" MaxHeight="200">
+                            <ListBox ItemsSource="{Binding LesCompatibilités}"
+                                     SelectedItem="{Binding CompatibilitésSelectionne}"/>
+                        </GroupBox>
+                        <StackPanel Orientation="Horizontal" 
+                                    HorizontalAlignment="Center">
+                            <Button Content="+"
+                                    Command="{Binding AddCompatibliteCommande}"
+                                    Width="40" 
+                                    Height="20"
+                                    FontSize="14"
+                                    FontWeight="Bold"
+                                    Background="#FFA6FFB7"
+                                    BorderBrush="#FF008859" 
+                                    Foreground="#FF006F3F"/>
+
+                            <Button Content="-"
+                                    Command="{Binding RemoveCompatibliteCommande}"
+                                    Width="40" 
+                                    Height="20" 
+                                    FontSize="14"
+                                    FontWeight="Bold"
+                                    Background="Red" 
+                                    BorderBrush="Red" 
+                                    Foreground="White"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                </StackPanel>
+            </Grid>
+
+
+
+            <StackPanel Grid.Column="1" VerticalAlignment="Stretch" >
+                <StackPanel Orientation="Horizontal" Height="50" HorizontalAlignment="Center">
+                    <Button Content="Nouveau" 
+                            Command="{Binding NouveauCommand}" 
+                            FontSize="16"
+                            Height="30" Width="100"
+                            Margin="5"
+                            Background="#FFFFFFE7" Foreground="#FF118BCA" 
+                            BorderBrush="#FFFFE66F"/>
+
+                    <Button Content="Enregistrer" 
+                            Command="{Binding EnregistreCommand}" 
+                            FontSize="16"
+                            Height="30" Width="100"
+                            Margin="5"
+                            Background="#FFEAFFE7" Foreground="#FF1193CA" 
+                            BorderBrush="#FF6FFF78"/>
+
+                    <Button Content="Supprimer" 
+                            Command="{Binding DeleteCommand}" 
+                            FontSize="16"
+                            Height="30" Width="100"
+                            Margin="5"
+                            Background="#FFFFE7E7" Foreground="#FFCA1111" 
+                            BorderBrush="#FFFF6F6F"/>
+                    
+                </StackPanel>
+
+                <StackPanel Height="160" Width="250" Margin="20">
+                    <StackPanel.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF005A79"/>
+                            <GradientStop Color="#FFB9EDFF" 
+                                          Offset="1"/>
+                        </LinearGradientBrush>
+                    </StackPanel.Background>
+                    <Label Content="Photo"/>
+                </StackPanel>
+
+                <GroupBox MinHeight="250" Header="Quelques Stats">
+                    
+                </GroupBox>
+                <Button Content="Voir historique"
+                        Command="{Binding HistoriqueCommand}"/>
+
+
+            </StackPanel>
+
+        </Grid>
+
+
+
+
+    </Grid>
+</UserControl>

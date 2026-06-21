@@ -6,10 +6,42 @@
              xmlns:local="clr-namespace:Wpf_App_Pattoon_Animalerie.View.UserControlView"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="#FFFEFFB7">
-        <TextBlock Text="{Binding Message}"
-       HorizontalAlignment="Center"
-       VerticalAlignment="Center"
-       FontSize="30" Width="130"/>
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="11*"/>
+            <RowDefinition Height="63*"/>
+            <RowDefinition Height="16*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="LES DEMANDES"
+                   HorizontalAlignment="Center"
+                   FontSize="30" Foreground="#FF008250"  />
+
+        <DataGrid Grid.Row="1" 
+                  ItemsSource="{Binding LesDemandes}"
+                  SelectedItem="{Binding DemandeSelectionne}"
+                  Width="Auto"
+                  Height="Auto"
+                  FontSize="16"
+                  SelectionMode="Single" SelectionUnit="FullRow" IsReadOnly="True"
+                  Background="White" BorderBrush="{x:Null}" 
+                  Foreground="#FF026977">
+
+            <DataGrid.InputBindings>
+                    <MouseBinding MouseAction="LeftDoubleClick"
+                        Command="{Binding OuvrirDetailCommand}"
+                        CommandParameter="{Binding DemandeSelectionne}"/>
+
+            </DataGrid.InputBindings>
+            
+        </DataGrid>
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Content="Nouveau"
+                    Command="{Binding NouveauCommand}"
+                    Width="120" Height="30"/>
+
+        </StackPanel>
+
     </Grid>
 </UserControl>

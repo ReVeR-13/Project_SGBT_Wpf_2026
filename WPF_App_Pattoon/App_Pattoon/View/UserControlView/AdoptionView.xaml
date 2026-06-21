@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="Wpf_App_Pattoon_Animalerie.View.UserControlView.AdoptionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Wpf_App_Pattoon_Animalerie.View.UserControlView"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="9*"/>
+            <RowDefinition Height="68*"/>
+            <RowDefinition Height="13*"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Grid.Row="0">
+            <TextBlock TextWrapping="Wrap" Text="Listes des Adoptions"/>
+            <TextBlock TextWrapping="Wrap" Text="Message"/>
+        </StackPanel>
+
+        <DataGrid Grid.Row="1" Height="Auto" 
+                  ItemsSource="{Binding LesAdoptions}"
+                  SelectedItem="{Binding AdoptionSelectionne}"
+                  SelectionMode="Single" 
+                  SelectionUnit="FullRow" 
+                  IsReadOnly="True">
+            <DataGrid.InputBindings>
+                
+                <MouseBinding MouseAction="LeftDoubleClick"
+                              Command="{Binding OuvrirDetailCommand}"
+                              CommandParameter="{Binding AdoptionSelectionne}"/>
+
+            </DataGrid.InputBindings>
+        </DataGrid>
+
+        <StackPanel Grid.Row="2">
+            
+            <Button Content="Nouveau" 
+                    Command="{Binding NouveauCommand}" 
+                    FontSize="16"
+                    Height="40" Width="100"
+                    Margin="5"
+                    Background="#FFFFFFE7" Foreground="#FF118BCA" 
+                    BorderBrush="#FFFFE66F"/>
+            
+        </StackPanel>
+
+    </Grid>
+</UserControl>

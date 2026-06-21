@@ -5,14 +5,76 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Wpf_App_Pattoon_Animalerie.View.WindowView"
         xmlns:vm="clr-namespace:Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details"
+        xmlns:vms="clr-namespace:Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel"
         xmlns:views="clr-namespace:Wpf_App_Pattoon_Animalerie.View.UserControlView.Details"
+        xmlns:view="clr-namespace:Wpf_App_Pattoon_Animalerie.View.UserControlView"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
-        Title="Detail" MinHeight="700" MinWidth="1250">
+        Title="Detail" MinHeight="750" MinWidth="1250">
     <Window.Resources>
 
         <DataTemplate DataType="{x:Type vm:ContactDetailViewModel}">
             <views:Details_ContactView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:DemandeDetailViewModel}">
+            <views:Details_DemandeView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:AdoptionDetailViewModel}">
+            <views:Details_AdoptionView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:AccueilDetailViewModel}">
+            <views:Details_AccueilView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:SortieDetailViewModel}">
+            <views:Details_SortieView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:EntreeDetailViewModel}">
+            <views:Detail_EntreeView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:TypeContactDetailViewModel}">
+            <views:Details_TypeContactView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:TypeAnimalDetailViewModel}">
+            <views:Details_TypeAnimalView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:AbriDetailViewModel}">
+            <views:Details_AbriView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:VaccinDetailViewModel}">
+            <views:Details_VaccinView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:CompatibiliteDetailViewModel}">
+            <views:Details_CompatibiliteView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:CouleurDetailViewModel}">
+            <views:Details_CoulleurView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:MotifEntreeDetailViewModel}">
+            <views:Details_MotifEntreeView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:MotifSortieDetailViewModel}">
+            <views:Details_MotifSortieView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:AnimalDetailViewModel}">
+            <views:Details_AnimalView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:HistoriqueAnimalViewModel}">
+            <views:Details_HistoriqueAnimal/>
         </DataTemplate>
 
     </Window.Resources>
