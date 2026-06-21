@@ -21,7 +21,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         {
             if (Find(type.Id) != null)
             {
-                ExceptionLauncher.New("GetUnType Contact", "Cet Contact a deja cet role...");
+                ExceptionLauncher.New("GetUnType ContactSelectionne", "Cet ContactSelectionne a deja cet role...");
             }
             _lesTypeContact_Contact.Add(type.Id, type);
             _numType++;
@@ -30,7 +30,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         {
             if (!_lesTypeContact_Contact.ContainsKey(id.Trim().ToUpper()))
             {
-                throw new Exception($"[MyType Contact - Contact] Ce contact n'a pas ce type de contact : {id}");
+                throw new Exception($"[MyType ContactSelectionne - ContactSelectionne] Ce contact n'a pas ce type de contact : {id}");
             }
             _lesTypeContact_Contact.Remove(id.Trim().ToUpper());
         }
@@ -49,7 +49,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             TypeContact_Contact tpe = null;
             foreach (TypeContact_Contact t in AllOfContact(contacts).Values)
             {
-                if (t.Type == type)
+                if (t.Type.Id == type.Id)
                 {
                     tpe = t;
                     break;
@@ -61,7 +61,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         public static Dictionary<string, TypeContact_Contact> AllOfContact(Contact contact)
         {
             Dictionary<string, TypeContact_Contact> retval = new();
-            foreach (TypeContact_Contact t in _lesTypeContact_Contact.Values.Where(a => a.Contact == contact))
+            foreach (TypeContact_Contact t in _lesTypeContact_Contact.Values.Where(a => a.Contact.Id == contact.Id))
             {
                     retval.Add(t.Type.Id, t); 
             }
@@ -79,10 +79,6 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             }
             return retval;
         }
-        public static TypeContact_Contact? DB_Find(TypeContact_Contact type)
-        {
-            return DB_TypeCnt_Contact.UnRoles(type);
-        }
 
         public static string LesTypes
         {
@@ -91,7 +87,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
                 int i = 0;
                 string retVal = $"Liste des Types Contacts [{Count}]\n\n" +
                     string.Format($"{"{0,-4} {1,-30} {2,-11} {3,-13} {4,-15}\n"}",
-                    "N°", "Id", "Date Crea.", "Contact", "Roles");
+                    "N°", "Id", "Date Crea.", "ContactSelectionne", "Roles");
                 foreach (TypeContact_Contact a in _lesTypeContact_Contact.Values)
                 {
                     i++;
@@ -120,11 +116,15 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             }
         }
 
+        public static TypeContact_Contact? DB_Find(TypeContact_Contact type)
+        {
+            return DB_TypeCnt_Contact.UnRoles(type);
+        }
         public static int DB_Add(TypeContact_Contact type)
         {
             int ret = 0;
 
-            if (DB_TypeCnt_Contact.UnRoles(type) == null)
+            if (DB_Find(type) == null)
             {
                 ret = DB_TypeCnt_Contact.Add(type); ;
             }
@@ -134,7 +134,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         {
             int ret = 0;
 
-            if (DB_TypeCnt_Contact.UnRoles(type) != null)
+            if (DB_Find(type) != null)
             {
                 ret = DB_TypeCnt_Contact.Delete(type); ;
             }

@@ -74,9 +74,10 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         }
         public override string ToString()
         {
-            string retVal =
+            string retVal = this.Nom; /*
                 Forma.Texta2("ID", $"{Id}\n") +
-                base.ToString();
+                base.ToString();*/
+
 
             return retVal;
         }
@@ -105,12 +106,12 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         public int Update(string nom, string description)
         {
             int ret = 0;
-            if (AllTypeAnimal.FindTypebyId(Id) != null)
+            if (AllTypeAnimal.FindTypeByNom(Forma.TrimUpper(nom)) == null)
             {
                 Nom = nom;
-                Description = description; 
-                AllTypeAnimal.DB_Update(this);
             }
+            Description = description;
+            ret = AllTypeAnimal.DB_Update(this);
             return ret;
         }
         public static int Delete(TypeAnimal type)
@@ -143,7 +144,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         private string id;
         private TypeContact(string nom, string description) : base(nom, description)
         {
-            id = Forma.SimpleId("TCT", AllTypeContact.NumType + 1);
+            id = Forma.SimpleId("TCT", AllTypeContact.NumType + 9998);
         }
         public override string Id
         {
@@ -191,9 +192,10 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
             if (AllTypeContact.FindByNom(Forma.TrimUpper(nom)) == null)
             {
                 Nom = nom;
-                Description = description;
-                retVal = AllTypeContact.DB_Update(this);
             }
+            Description = description;
+            retVal = AllTypeContact.DB_Update(this);
+
             return retVal;
         }
         public static int Delete(TypeContact type)

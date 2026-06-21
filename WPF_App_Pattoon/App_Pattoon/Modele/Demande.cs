@@ -1,4 +1,5 @@
-﻿using Wpf_App_Pattoon_Animalerie.Service;
+﻿using System.Net.Http.Headers;
+using Wpf_App_Pattoon_Animalerie.Service;
 
 namespace Wpf_App_Pattoon_Animalerie.Modele
 {
@@ -119,79 +120,87 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
             }
 
             string retVal = Id;
-                /*Forma.Center($"FICHE DE DEMANDE N° [ {Id} ]\n") +
-                Forma.Center(new string('-',90)+$"\n") +
+            /*Forma.Center($"FICHE DE DEMANDE N° [ {Id} ]\n") +
+            Forma.Center(new string('-',90)+$"\n") +
 
-                info +
+            info +
 
-                Forma.Texta2("Date Crea.", $"{DateCreation:dd-MM-yyyy}") +
+            Forma.Texta2("Date Crea.", $"{DateCreation:dd-MM-yyyy}") +
 
-                Forma.Texta2("ID", $"{Id}") +
-                Forma.Texta2("Type Dem.", $"{Type}") +
+            Forma.Texta2("ID", $"{Id}") +
+            Forma.Texta2("Type Dem.", $"{Type}") +
 
-                Forma.Section("Animal") +
+            Forma.Section("Animal") +
 
-                Forma.Texta2("Animal id", $"{Animal.Id}") +
-                Forma.Texta2("Nom", $"{Animal.Nom}") +
-                Forma.Texta2("Type An.", $"{Animal.Type.Nom}") +
+            Forma.Texta2("Animal id", $"{Animal.Id}") +
+            Forma.Texta2("Nom", $"{Animal.Nom}") +
+            Forma.Texta2("Type An.", $"{Animal.Type.Nom}") +
 
-                Forma.Section("Contacte") +
+            Forma.Section("Contacte") +
 
-                Forma.Texta2("Id Contacte", $"{Contact.Gsm}") +
-                Forma.Texta2("Contact", $"{Contact.Nom} {Contact.Prenom}") +
-                Forma.Texta2("Gsm", $"{Contact.Gsm}") +
+            Forma.Texta2("Id Contacte", $"{ContactSelectionne.Gsm}") +
+            Forma.Texta2("ContactSelectionne", $"{ContactSelectionne.Nom} {ContactSelectionne.Prenom}") +
+            Forma.Texta2("Gsm", $"{ContactSelectionne.Gsm}") +
 
-                Forma.Section("Infos") +
+            Forma.Section("Infos") +
 
-                Forma.Texta2("Statut", $"{Statut}") +
-                Forma.Texta2("Remarque", $"{Remarque}") +
-                Forma.Texta2("Date Ferm.", $"{DateFermeture?.ToString("dd-MM-yyyy")}");
+            Forma.Texta2("Decision", $"{Decision}") +
+            Forma.Texta2("Remarque", $"{Remarque}") +
+            Forma.Texta2("Date Ferm.", $"{DateFermeture?.ToString("dd-MM-yyyy")}");
 
-            if (Type == ETypeDemande.ENTREE)
+        retVal += InfosSuivi()*/
+
+            return retVal;
+        }
+
+        public string InfosSuivi()
+        {
+
+            string retVal = "--";
+
+            if (this.Type == ETypeDemande.ENTREE)
             {
                 Entree entree = AllEntree.Find(this);
 
-                retVal += Forma.Section("Entree") +
+                retVal = Forma.Section("Entree") +
 
                     Forma.Texta2("Id Entree", entree == null ? "--" : entree.Id) +
                     Forma.Texta2("Date crea.", entree == null ? "--" : entree.DateCreation.ToString("dd-MM-yyyy")) +
                     Forma.Texta2("Motif", entree == null ? "--" : entree.Motifs.Libele);
             }
 
-            if (Type == ETypeDemande.SORTIE)
+            if (this.Type == ETypeDemande.SORTIE)
             {
                 Sortie sortie = AllSortie.Find(this);
 
-                retVal += Forma.Section("Sortie") +
+                retVal = Forma.Section("Sortie") +
 
                     Forma.Texta2("Id Sortie", sortie == null ? "--" : sortie.Id) +
                     Forma.Texta2("Date crea.", sortie == null ? "--" : sortie.DateCreation.ToString("dd-MM-yyyy")) +
                     Forma.Texta2("Motif", sortie == null ? "--" : sortie.Motifs.Libele);
             }
 
-            if (Type == ETypeDemande.ADOPTION)
+            if (this.Type == ETypeDemande.ADOPTION)
             {
                 Adoption adoption = AllAdoption.Find(this);
 
-                retVal += Forma.Section("Adoption") +
+                retVal = Forma.Section("Adoption") +
 
                     Forma.Texta2("Id Adoption", adoption == null ? "--" : adoption.Id) +
-                    Forma.Texta2("Statut", adoption == null ? "--": adoption.Statut.ToString());
+                    Forma.Texta2("Decision", adoption == null ? "--" : adoption.Decision.ToString());
             }
 
-            if (Type == ETypeDemande.ACCUEIL)
+            if (this.Type == ETypeDemande.ACCUEIL)
             {
                 Accueil accueil = AllAccueil.Find(this);
 
-                retVal += Forma.Section("Accueil") +
+                retVal = Forma.Section("Accueil") +
 
-                    Forma.Texta2("Id Adoption", accueil == null ? "--" : accueil.Id) +
-                    Forma.Texta2("Statut", accueil == null ? "--" : accueil.Statut.ToString());
-            }*/
-
+                    Forma.Texta2("Id Accueil", accueil == null ? "--" : accueil.Id) +
+                    Forma.Texta2("Decision", accueil == null ? "--" : accueil.Decision.ToString());
+            }
             return retVal;
         }
-
         public int Update(Contact? contacts,Animal? animal ,ETypeDemande? type, EStatutDemande? statut, string remarque)
         {
             if (Statut > EStatutDemande.EN_COURS)

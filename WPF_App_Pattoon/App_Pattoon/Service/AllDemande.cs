@@ -10,7 +10,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
 {
     public static class AllDemande
     {
-        private static readonly Dictionary<string, Demande> _lesDemandes;
+        private static Dictionary<string, Demande> _lesDemandes;
         private static int _num;
 
         static AllDemande()
@@ -34,12 +34,16 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         {
             get { return _lesDemandes.Count; }
         }
+        public static Dictionary<string, Demande> ListeAllDemande
+        {
+            get { return _lesDemandes;}
+        }
         public static string Listes
         {
             get
             {
                 int i = 0;
-                string retVal = Forma.Text("N°", "Id", "Date Crea.", "Type", "Type Animal", "Statut");
+                string retVal = Forma.Text("N°", "Id", "Date Crea.", "Type", "Type Animal", "Decision");
 
                 foreach (Demande a in _lesDemandes.Values)
                 {
@@ -60,7 +64,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             get
             {
                 int i = 0;
-                string retVal = Forma.Text("N°", "Id", "Date Crea.", "Type", "Type Animal", "Statut");
+                string retVal = Forma.Text("N°", "Id", "Date Crea.", "Type", "Type Animal", "Decision");
 
                 foreach (Demande a in _lesDemandes.Values.OrderByDescending(od => od.DateCreation).Take(7))
                 {
@@ -81,9 +85,9 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         {
 
             int i = 0;
-            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Type", "Statut");
+            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Type", "Decision");
 
-            foreach (Demande a in _lesDemandes.Values.Where(a => a.Animal == animal))
+            foreach (Demande a in _lesDemandes.Values.Where(a => a.Animal.Id == animal.Id))
             {
                 i++;
                 retVal += Forma.Text(
@@ -100,9 +104,9 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         {
 
             int i = 0;
-            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Type", "Statut");
+            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Type", "Decision");
 
-            foreach (Demande a in _lesDemandes.Values.Where(a => a.Contact == contact))
+            foreach (Demande a in _lesDemandes.Values.Where(a => a.Contact.Id == contact.Id))
             {
                 i++;
                 retVal += Forma.Text(
@@ -112,7 +116,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
                 $"{a.Type}",
                 $"{a.Statut}");
             }
-            return Forma.Center($"Liste des Demandes de Contact: {contact.Id} [{i}/{Count}]\n\n") + retVal;
+            return Forma.Center($"Liste des Demandes de ContactSelectionne: {contact.Id} [{i}/{Count}]\n\n") + retVal;
 
         }
 
@@ -124,7 +128,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         {
 
             int i = 0;
-            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Type", "Type Animal", "Statut");
+            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Type", "Type Animal", "Decision");
 
             foreach (Demande a in _lesDemandes.Values.Where(a => a.Statut == eStatut))
             {
@@ -137,14 +141,14 @@ namespace Wpf_App_Pattoon_Animalerie.Service
                 $"{a.Animal.Type.Nom}",
                 $"{a.Statut}");
             }
-            return Forma.Center($"Liste des Demandes de Statut: {eStatut} [{i}/{Count}]\n\n") + retVal;
+            return Forma.Center($"Liste des Demandes de Decision: {eStatut} [{i}/{Count}]\n\n") + retVal;
 
         }
         public static string ListeByStatut(EStatutDemande eStatut, EStatutDemande yStatut)
         {
 
             int i = 0;
-            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Type", "Type Animal", "Statut");
+            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Type", "Type Animal", "Decision");
 
             foreach (Demande a in _lesDemandes.Values.Where(a => a.Statut == eStatut || a.Statut == yStatut))
             {
@@ -160,11 +164,11 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             return Forma.Center($"Liste des Demandes: {eStatut} | {yStatut} [{i}/{Count}]\n\n") + retVal;
 
         }
-        public static string ListeByStatut(ETypeDemande eType)
+        public static string ListeByTypeString(ETypeDemande eType)
         {
 
             int i = 0;
-            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Type", "Type Animal", "Statut");
+            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Type", "Type Animal", "Decision");
 
             foreach (Demande a in _lesDemandes.Values.Where(a => a.Type == eType))
             {
@@ -180,11 +184,23 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             return Forma.Center($"Liste des Demandes: {eType} [{i}/{Count}]\n\n") + retVal;
 
         }
-        public static string ListeByStatut(EStatutDemande eStatut, ETypeDemande eType)
+        public static Dictionary<string, Demande> ListeByType(ETypeDemande eType)
+        {
+
+            Dictionary<string, Demande> retVal = new Dictionary<string, Demande>();
+
+            foreach (Demande a in _lesDemandes.Values.Where(a => a.Type == eType))
+            {
+                retVal.Add(a.Id, a);
+            }
+            return retVal;
+
+        }
+        public static string ListeByStatutString(EStatutDemande eStatut, ETypeDemande eType)
         {
 
             int i = 0;
-            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Type", "Type Animal", "Statut");
+            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Type", "Type Animal", "Decision");
 
             foreach (Demande a in _lesDemandes.Values.Where(a => a.Statut == eStatut && a.Type == eType))
             {
@@ -200,6 +216,19 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             return Forma.Center($"Liste des Demandes: {eStatut} & {eType} [{i}/{Count}]\n\n") + retVal;
 
         }
+        public static Dictionary<string, Demande> ListeByStatut(EStatutDemande eStatut, ETypeDemande eType)
+        {
+
+            int i = 0;
+            Dictionary<string, Demande> retVal = new Dictionary<string, Demande>();
+
+            foreach (Demande a in _lesDemandes.Values.Where(a => a.Statut == eStatut && a.Type == eType))
+            {
+                retVal.Add(a.Id, a);
+            }
+            return retVal;
+
+        }
 
         public static IEnumerable<Demande> Get()
         {
@@ -212,7 +241,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         {
             foreach (Demande dem in _lesDemandes.Values)
             {
-                if (dem.Contact == contact)
+                if (dem.Contact.Id == contact.Id)
                 {
                     yield return dem;
                 }
@@ -223,7 +252,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         {
             foreach (Demande dem in _lesDemandes.Values)
             {
-                if (dem.Animal == animal)
+                if (dem.Animal.Id == animal.Id)
                 {
                     yield return dem;
                 }
@@ -278,7 +307,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         public static Demande? Find(Contact contact, Animal animal, EStatutDemande eStatut, ETypeDemande eType)
         {
             Demande? ado = null;
-            if (Get().Where(a => a.Statut < eStatut && a.Contact == contact && a.Animal == animal && a.Type == eType).Any())
+            if (Get().Where(a => a.Statut < eStatut && a.Contact.Id == contact.Id && a.Animal.Id == animal.Id && a.Type == eType).Any())
             {
                 foreach (Demande d in Get().Where(a => a.Statut < eStatut &&
                                                   a.Contact == contact &&
@@ -338,5 +367,9 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             return retval;
         }
 
+        public static void DB_Sync()
+        {
+            _lesDemandes = new Dictionary<string, Demande>(DB_Demande.All_From_Db());
+        }
     }
 }

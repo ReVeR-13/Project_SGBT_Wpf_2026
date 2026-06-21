@@ -36,11 +36,11 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         }
         public override string ToString()
         {
-            string retval = Forma.Padding($"Fiche de Couleur N° [{Id}]\n")  +
+            string retval = this.Nom;/*Forma.Padding($"Fiche de Couleur N° [{Id}]\n")  +
                 Forma.Padding($"********************************************\n") +
                 Forma.Texta2("DATE", DateCreation.ToString("dd-MM-yyyy")) +
                 Forma.Texta2("ID", Id) +
-                Forma.Texta2("NOM", Nom);
+                Forma.Texta2("NOM", Nom);*/
             return retval;
         }
 

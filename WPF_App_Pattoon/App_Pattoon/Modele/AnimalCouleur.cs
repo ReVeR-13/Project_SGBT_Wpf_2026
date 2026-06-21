@@ -44,13 +44,13 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         }
         public override string ToString()
         {
-            string retval = 
+            string retval = Couleur.Nom;/*
                 Forma.Center($"Fiche de Couleur de [ {Animal.Id} ]\n") +
                 Forma.Center(new string('-',90) + "\n") +
                 Forma.Texta2("DATE", DateCreation.ToString("dd-MM-yyyy")) +
                 Forma.Texta2("ID", Id) +
                 Forma.Texta2("ID ANIMAL", Animal.Id) +
-                Forma.Texta2("ID COULEUL", Couleur.Id); ;
+                Forma.Texta2("ID COULEUL", Couleur.Id); */
             return retval;
         }
 
@@ -63,7 +63,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         }
         public int Delete()
         {
-            AllAnimalCouleur.Delete(Id);
+            AllAnimalCouleur.Delete(this);
             return AllAnimalCouleur.DB_Delete(this);
         }
         public static int Save(AnimalCouleur coloration)

@@ -89,7 +89,7 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
                     retval.Id = id;
                     retval.DateCreation = (DateTime)dateCreation;
 
-                    if (AllContacts.Find(Forma.TrimUpper(nom)) == null)
+                    if (AllContacts.Find(Forma.TrimUpper(id)) == null)
                     {
                         AllContacts.Add(retval);
                     }

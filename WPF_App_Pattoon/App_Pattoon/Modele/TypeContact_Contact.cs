@@ -78,7 +78,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         {
             string retVal = $"{this.Type.Nom}";/*string.Format($"{"{0,-8} : {1,-12}\n"}", "Date", $"{DateCreation.ToString("dd-MM-yyyy")}") +
                 string.Format("{0,-8} : {1,-30}\n", "ID", $"{Id}") +
-                string.Format("{0,-8} : {1,-12}\n", "Contact", $"{Contact.Nom} {Contact.Prenom}") +
+                string.Format("{0,-8} : {1,-12}\n", "ContactSelectionne", $"{ContactSelectionne.Nom} {ContactSelectionne.Prenom}") +
                 string.Format("{0,-8} : {1,-12}\n", "Roles", $"{Type.Nom}");*/
 
             return retVal;
@@ -87,10 +87,10 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
 
         public static TypeContact_Contact Creer(Contact contact, TypeContact type)
         {
-            string id = $"{contact.Id}{type.Id}";
+            
             if (contact == null || type == null)
             {
-                ExceptionLauncher.New("GetUnType Contact - Contact", $"Parametre invalide");
+                ExceptionLauncher.New("GetUnType ContactSelectionne - ContactSelectionne", $"Parametre invalide");
             }
 
             return new TypeContact_Contact(contact, type);
@@ -105,8 +105,8 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
             int ret = 0;
             if (AllTypeContact_Contact.Find(tpe.Id) != null)
             {
-                AllTypeContact_Contact.Delete(tpe.Id);
                 ret = AllTypeContact_Contact.DB_Delete(tpe);
+                AllTypeContact_Contact.Delete(tpe.Id);
             }
             return ret;
             

@@ -174,9 +174,7 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
         {
             Dictionary<string, TypeContact> retval = new Dictionary<string, TypeContact>();
 
-            using NpgsqlCommand sqlcmd = new NpgsqlCommand($"select id_type, date_creation, libele, description " +
-                                                           $"from t_type_contact " +
-                                                           $"order by id_type ",
+            using NpgsqlCommand sqlcmd = new NpgsqlCommand(DB_Convertisseur.SelectFrom("f_All_type_contact()"),
                                                            AccessDB.SqlConn);
 
             try
@@ -185,10 +183,10 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
                 while (reader.Read())
                 {
 
-                    string id              = DB_Convertisseur.String(reader, "id_type");
-                    DateTime? dateCreation = DB_Convertisseur.Date(reader, "date_creation");
-                    string nom             = DB_Convertisseur.String(reader, "libele");
-                    string descr           = DB_Convertisseur.String(reader, "description");
+                    string id              = DB_Convertisseur.String(reader, "id");
+                    DateTime? dateCreation = DB_Convertisseur.Date(reader, "date");
+                    string nom             = DB_Convertisseur.String(reader, "nom");
+                    string descr           = DB_Convertisseur.String(reader, "descri");
 
                     TypeContact tpe = TypeContact.Creer(nom, descr);
                     tpe.Id = id;
@@ -213,9 +211,7 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
         {
             TypeContact? retval = null;
 
-            using NpgsqlCommand sqlcmd = new NpgsqlCommand($"select id_type, date_creation, libele, description " +
-                                                           $"from t_type_contact " +
-                                                           $"where id_type = @id ",
+            using NpgsqlCommand sqlcmd = new NpgsqlCommand(DB_Convertisseur.SelectFrom("f_One_type_contact(@id)"),
                                                            AccessDB.SqlConn);
 
             try
@@ -229,10 +225,10 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
                 using NpgsqlDataReader reader = sqlcmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    string idty           = DB_Convertisseur.String(reader, "id_type");
-                    DateTime dateCreation = (DateTime)DB_Convertisseur.Date(reader, "date_creation");
-                    string nom            = DB_Convertisseur.String(reader, "libele");
-                    string descr          = DB_Convertisseur.String(reader, "description");
+                    string idty           = DB_Convertisseur.String(reader, "id");
+                    DateTime dateCreation = (DateTime)DB_Convertisseur.Date(reader, "date");
+                    string nom            = DB_Convertisseur.String(reader, "nom");
+                    string descr          = DB_Convertisseur.String(reader, "descri");
 
                     retval = TypeContact.Creer(nom, descr);
                     retval.Id = idty;
@@ -297,14 +293,12 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
 
         public static int Add(TypeContact type)
         {
-            string cmdtext = "insert into t_type_contact(id_type, date_creation, libele, description ) values (@id, @date, @nom, @descr) ";
+            string cmdtext = DB_Convertisseur.SelectFrom("f_create_type_contact(@nom, @descr)");
 
             var parametres = new Dictionary<string, (NpgsqlTypes.NpgsqlDbType Type, object Value)>
             {
-                { "@date",(NpgsqlTypes.NpgsqlDbType.Date, type.DateCreation) },
                 { "@nom",(NpgsqlTypes.NpgsqlDbType.Varchar, type.Nom) },
                 { "@descr",(NpgsqlTypes.NpgsqlDbType.Varchar, type.Description) },
-                { "@id",(NpgsqlTypes.NpgsqlDbType.Varchar , type.Id) }
             };
 
             return Requets.ExecuteNonQuery(cmdtext, parametres);
@@ -325,13 +319,13 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
             return Requets.ExecuteNonQuery(cmdtext, parametres);
 
         }
-        public static int Delete(string nom)
+        public static int Delete(string id)
         {
-            string cmdtext = "delete from t_type_contact where libele = @nom";
+            string cmdtext = DB_Convertisseur.SelectFrom("f_delete_type_contact(@id)");
 
             var parametres = new Dictionary<string, (NpgsqlTypes.NpgsqlDbType Type, object Value)>
             {
-                { "@nom",(NpgsqlTypes.NpgsqlDbType.Varchar, nom) },
+                { "@id",(NpgsqlTypes.NpgsqlDbType.Varchar, id) },
             };
 
             return Requets.ExecuteNonQuery(cmdtext, parametres);

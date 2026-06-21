@@ -115,7 +115,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         }
         public override string ToString()
         {
-            string retVal = Id;//Forma.Texta2("Id", Id)+ base.ToString();
+            string retVal = Libele;//Forma.Texta2("Id", Id)+ base.ToString();
             return retVal;
         }
     }
@@ -175,7 +175,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         }
         public override string ToString()
         {
-            string retVal = Id;//Forma.Texta2("Id", Id) + base.ToString();
+            string retVal = Libele;//Forma.Texta2("Id", Id) + base.ToString();
             return retVal;
         }
     }

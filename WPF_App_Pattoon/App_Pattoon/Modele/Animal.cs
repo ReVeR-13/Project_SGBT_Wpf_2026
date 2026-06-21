@@ -47,6 +47,19 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
             get { return _idAnimal; }
             set { _idAnimal = value; }
         }
+        public DateTime DateCreation
+        {
+            get { return _date; }
+            set { _date = Forma.Checked_DateCreation(value); }
+        }
+        public TypeAnimal Type
+        {
+            get { return _type; }
+            set
+            {
+                _type = value;
+            }
+        }
         public EStatutAnimal Statut
         {
             get
@@ -58,22 +71,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
                 _statue = value;
             }
         }
-        public Abri? Abri
-        {
-            get
-            {
-                return _abri;
-            }
-            set
-            {
-                _abri = value;
-            }
-        }
-        public DateTime DateCreation
-        {
-            get { return _date; }
-            set { _date = Forma.Checked_DateCreation(value); }
-        }
+
         public string Nom
         {
             get { return _nom; }
@@ -86,12 +84,12 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
                 _nom = value.Trim().ToUpper();
             }
         }
-        public TypeAnimal Type
+        public Couleur Couleur
         {
-            get { return _type; }
+            get { return _couleur; }
             set
             {
-                _type = value;
+                _couleur = value;
             }
         }
         public DateTime DateNaissance
@@ -106,21 +104,6 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
                 _dateNaissance = value;
             }
         }
-        public DateTime? DateDeces
-        {
-            get
-            {
-                return _dateDeces;
-            }
-            set
-            {
-                if (value != null && value < DateNaissance)
-                {
-                    ExceptionLauncher.New("Animal", $"La date de deces n'est pas valide : {value}");
-                }
-                _dateDeces = value;
-            }
-        }
         public ESexe Sexe
         {
             get { return _sexe; }
@@ -131,14 +114,6 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
                     throw new Exception($"[Animal] Sexe invalide : {value}");
                 }
                 _sexe = value;
-            }
-        }
-        public Couleur Couleur
-        {
-            get { return _couleur; }
-            set
-            {
-                _couleur = value;
             }
         }
         public bool Sterile
@@ -185,172 +160,224 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
                 _particularite = value;
             }
         }
-
-        public string Couleurs
+        public Abri? Abri
         {
             get
             {
-                string? retVal = null;
-                foreach (AnimalCouleur vc in GetCouleur())
-                {
-                    retVal += $"{vc.Couleur.Nom} | ";
-                }
-                retVal ??= Forma.Center("Pas de couleur secondaire\n");
-                return retVal;
+                return _abri;
+            }
+            set
+            {
+                _abri = value;
             }
         }
-        public string Vaccinations
+
+        public DateTime? DateDeces
         {
             get
             {
-                int i = 0;
-                string retVal = Forma.Padding(new string('*', 90)) + "\n" +
-                   Forma.Padding(Forma.Text("N°", "Id", "Vaccin", "Vacciné le", "Remarque"));
-                if (!GetVaccination().Any())
+                return _dateDeces;
+            }
+            set
+            {
+                if (value != null && value < DateNaissance)
                 {
-                    retVal += "\n" + Forma.Center($"Cet animal ne possede pas encore de vaccin.\n");
+                    ExceptionLauncher.New("Animal", $"La date de deces n'est pas valide : {value}");
                 }
-                foreach (Vaccination vc in GetVaccination())
-                {
-                    i++;
-                    retVal += Forma.Padding(Forma.Text(
-                             $"{i}",
-                             $"{vc.Id}",
-                             $"{vc.Vaccin.Nom}",
-                             $"{vc.DateCreation:dd-MM-yyyy}",
-                             vc.Remaque ?? "--"));
-                }
-
-                return Forma.Center($"Liste des Vaccinantions [{i}]\n") + retVal;
+                _dateDeces = value;
             }
         }
-        public string Compatibilites
+
+        public string CouleursString()
         {
-            get
+            string? retVal = null;
+            foreach (AnimalCouleur vc in GetCouleur())
             {
-                string retVal = Forma.Center($"Liste des Compatibilités [{AnimalCompatibilitéService.FindAllByAnimal(this).Count}/{AnimalCompatibilitéService.Count}]\n") +
-                                Forma.Padding(new string('*', 90)) + "\n" +
-                    Forma.Padding(Forma.Text("id", "Compatibilité", "Valeur", "Id"));
-
-                foreach (Compatibilite vc in AllCompatibilite.Get())
-                {
-                    AnimalCompatibilité? com = Compatible(vc);
-                    retVal += Forma.Padding(Forma.Text(
-                             com == null ? "--" : com.Compatible == true ? "O" : "X",
-                             $"{vc.Nom}",
-                             com == null ? "A Verifier" : com.Compatible == true ? "Oui" : "Non",
-                             com == null ? "--" : com.Id));
-                }
-
-                return retVal;
+                retVal += $"{vc.Couleur.Nom} | ";
             }
+            retVal ??= Forma.Center("Pas de couleur secondaire\n");
+            return retVal;
         }
-        public string Adoptions
+        public string VaccinationsString()
         {
-            get
+
+            int i = 0;
+            string retVal = Forma.Padding(new string('*', 90)) + "\n" +
+               Forma.Padding(Forma.Text("N°", "Id", "Vaccin", "Vacciné le", "Remarque"));
+            if (!GetVaccination().Any())
             {
-                int i = 0;
-                string retVal = Forma.Padding(new string('-', 90)) + "\n" +
-                   Forma.Padding(Forma.Text("N°", "Id", "Date", "Famille", "Statut"));
-
-                if (!GetAdoption().Any())
-                {
-                    retVal += "\n" + Forma.Center($"---- [ None ] ----\n");
-                }
-                foreach (Adoption vc in GetAdoption().OrderByDescending(dm => dm.DateCreation))
-                {
-                    i++;
-                    retVal += Forma.Padding(Forma.Text(
-                             $"{i}",
-                             $"{vc.Id}",
-                             $"{vc.DateCreation:dd-MM-yyyy}",
-                             $"{vc.Demande.Contact.Nom} {vc.Demande.Contact.Prenom}",
-                             $"{vc.Demande.Statut}"));
-                }
-
-                return Forma.Center($"Liste des Adoptions de {Nom} [{i}]\n") + retVal;
+                retVal += "\n" + Forma.Center($"Cet animal ne possede pas encore de vaccin.\n");
             }
+            foreach (Vaccination vc in GetVaccination())
+            {
+                i++;
+                retVal += Forma.Padding(Forma.Text(
+                         $"{i}",
+                         $"{vc.Id}",
+                         $"{vc.Vaccin.Nom}",
+                         $"{vc.DateCreation:dd-MM-yyyy}",
+                         vc.Remaque ?? "--"));
+            }
+
+            return Forma.Center($"Liste des Vaccinantions [{i}]\n") + retVal;
 
         }
-        public string Accueils
+        public Dictionary<string,Vaccination> EtatVaccinations()
         {
-            get
+
+            int i = 0;
+            Dictionary<string, Vaccination> retVal = [];
+            if (!GetVaccination().Any())
             {
-                int i = 0;
-                string retVal = Forma.Padding(new string('-', 90)) + "\n" +
-                   Forma.Padding(Forma.Text("N°", "Id", "Date", "Famille", "Statut"));
-
-                if (!GetAccueil().Any())
-                {
-                    retVal += "\n" + Forma.Center($"---- [ None ] ----\n");
-                }
-                foreach (Accueil vc in GetAccueil().OrderByDescending(dm => dm.DateCreation))
-                {
-                    i++;
-                    retVal += Forma.Padding(Forma.Text(
-                             $"{i}",
-                             $"{vc.Id}",
-                             $"{vc.DateCreation:dd-MM-yyyy}",
-                             $"{vc.Demande.Contact.Nom} {vc.Demande.Contact.Prenom}",
-                             $"{vc.Demande.Statut}"));
-                }
-
-                return Forma.Center($"Liste des accueils de {Nom} [{i}]\n") + retVal;
+                retVal = [];
             }
+            foreach (Vaccination vc in GetVaccination())
+            {
+                i++;
+                retVal.Add(vc.Id,vc);
+            }
+
+            return retVal;
 
         }
-        public string Entrees
+        public string CompatibilitesString()
         {
-            get
+            string retVal = Forma.Center($"Liste des Compatibilités [{AnimalCompatibilitéService.FindAllByAnimal(this).Count}/{AnimalCompatibilitéService.Count}]\n") +
+                            Forma.Padding(new string('*', 90)) + "\n" +
+                Forma.Padding(Forma.Text("id", "Compatibilité", "Valeur", "Id"));
+
+            foreach (Compatibilite vc in AllCompatibilite.Get())
             {
-                int i = 0;
-                string retVal = Forma.Padding(new string('-', 90)) + "\n" +
-                   Forma.Padding(Forma.Text("N°", "Id", "Date", "Famille", "statut Demande"));
-
-                if (!GetEntree().Any())
-                {
-                    retVal += "\n" + Forma.Center($"---- [ None ] ----\n");
-                }
-                foreach (Entree vc in GetEntree().OrderByDescending(dm => dm.DateCreation))
-                {
-                    i++;
-                    retVal += Forma.Padding(Forma.Text(
-                             $"{i}",
-                             $"{vc.Id}",
-                             $"{vc.DateCreation:dd-MM-yyyy}",
-                             $"{vc.Demande.Contact.Nom} {vc.Demande.Contact.Prenom}",
-                             $"{vc.Demande.Statut}"));
-                }
-
-                return Forma.Center($"Liste des entrees de {Nom} [{i}]\n") + retVal;
+                AnimalCompatibilité? com = Compatible(vc);
+                retVal += Forma.Padding(Forma.Text(
+                         com == null ? "--" : com.Compatible == true ? "O" : "X",
+                         $"{vc.Nom}",
+                         com == null ? "A Verifier" : com.Compatible == true ? "Oui" : "Non",
+                         com == null ? "--" : com.Id));
             }
+
+            return retVal;
 
         }
-        public string Sorties
+        public string EtatCompatibilites()
         {
-            get
+            string retVal = Forma.Center($"Liste des Compatibilités [{AnimalCompatibilitéService.FindAllByAnimal(this).Count}/{AnimalCompatibilitéService.Count}]\n") +
+                            Forma.Padding(new string('*', 90)) + "\n" +
+                Forma.Padding(Forma.Text("id", "Compatibilité", "Valeur", "Id"));
+
+            foreach (Compatibilite vc in AllCompatibilite.Get())
             {
-                int i = 0;
-                string retVal = Forma.Padding(new string('-', 90)) + "\n" +
-                   Forma.Padding(Forma.Text("N°", "Id", "Date", "Famille", "statut Demande"));
-
-                if (!GetSortie().Any())
-                {
-                    retVal += "\n" + Forma.Center($"---- [ None ] ----\n");
-                }
-                foreach (Sortie vc in GetSortie().OrderByDescending(dm => dm.DateCreation))
-                {
-                    i++;
-                    retVal += Forma.Padding(Forma.Text(
-                             $"{i}",
-                             $"{vc.Id}",
-                             $"{vc.DateCreation:dd-MM-yyyy}",
-                             $"{vc.Demande.Contact.Nom} {vc.Demande.Contact.Prenom}",
-                             $"{vc.Demande.Statut}"));
-                }
-
-                return Forma.Center($"Liste des sorties de {Nom} [{i}]\n") + retVal;
+                AnimalCompatibilité? com = Compatible(vc);
+                retVal += Forma.Padding(Forma.Text(
+                         com == null ? "--" : com.Compatible == true ? "O" : "X",
+                         $"{vc.Nom}",
+                         com == null ? "A Verifier" : com.Compatible == true ? "Oui" : "Non",
+                         com == null ? "--" : com.Id));
             }
+
+            return retVal;
+
+        }
+        public string AdoptionsString()
+        {
+            int i = 0;
+            string retVal = Forma.Padding(new string('-', 90)) + "\n" +
+               Forma.Padding(Forma.Text("N°", "Id", "Date", "Famille", "Decision"));
+
+            if (!GetAdoption().Any())
+            {
+                retVal += "\n" + Forma.Center($"---- [ None ] ----\n");
+            }
+            foreach (Adoption vc in GetAdoption().OrderByDescending(dm => dm.DateCreation))
+            {
+                i++;
+                retVal += Forma.Padding(Forma.Text(
+                         $"{i}",
+                         $"{vc.Id}",
+                         $"{vc.DateCreation:dd-MM-yyyy}",
+                         $"{vc.Demande.Contact.Nom} {vc.Demande.Contact.Prenom}",
+                         $"{vc.Demande.Statut}"));
+            }
+
+            return Forma.Center($"Liste des Adoptions de {Nom} [{i}]\n") + retVal;
+
+        }
+        public string AccueilsString()
+        {
+
+            int i = 0;
+            string retVal = Forma.Padding(new string('-', 90)) + "\n" +
+               Forma.Padding(Forma.Text("N°", "Id", "Date", "Famille", "Decision"));
+
+            if (!GetAccueil().Any())
+            {
+                retVal += "\n" + Forma.Center($"---- [ None ] ----\n");
+            }
+            foreach (Accueil vc in GetAccueil().OrderByDescending(dm => dm.DateCreation))
+            {
+                i++;
+                retVal += Forma.Padding(Forma.Text(
+                         $"{i}",
+                         $"{vc.Id}",
+                         $"{vc.DateCreation:dd-MM-yyyy}",
+                         $"{vc.Demande.Contact.Nom} {vc.Demande.Contact.Prenom}",
+                         $"{vc.Demande.Statut}"));
+            }
+
+            return Forma.Center($"Liste des accueils de {Nom} [{i}]\n") + retVal;
+
+
+        }
+        public string EntreesString()
+        {
+
+            int i = 0;
+            string retVal = Forma.Padding(new string('-', 90)) + "\n" +
+               Forma.Padding(Forma.Text("N°", "Id", "Date", "Famille", "statut Demande"));
+
+            if (!GetEntree().Any())
+            {
+                retVal += "\n" + Forma.Center($"---- [ None ] ----\n");
+            }
+            foreach (Entree vc in GetEntree().OrderByDescending(dm => dm.DateCreation))
+            {
+                i++;
+                retVal += Forma.Padding(Forma.Text(
+                         $"{i}",
+                         $"{vc.Id}",
+                         $"{vc.DateCreation:dd-MM-yyyy}",
+                         $"{vc.Demande.Contact.Nom} {vc.Demande.Contact.Prenom}",
+                         $"{vc.Demande.Statut}"));
+            }
+
+            return Forma.Center($"Liste des entrees de {Nom} [{i}]\n") + retVal;
+
+
+        }
+        public string SortiesString()
+        {
+
+            int i = 0;
+            string retVal = Forma.Padding(new string('-', 90)) + "\n" +
+               Forma.Padding(Forma.Text("N°", "Id", "Date", "Famille", "statut Demande"));
+
+            if (!GetSortie().Any())
+            {
+                retVal += "\n" + Forma.Center($"---- [ None ] ----\n");
+            }
+            foreach (Sortie vc in GetSortie().OrderByDescending(dm => dm.DateCreation))
+            {
+                i++;
+                retVal += Forma.Padding(Forma.Text(
+                         $"{i}",
+                         $"{vc.Id}",
+                         $"{vc.DateCreation:dd-MM-yyyy}",
+                         $"{vc.Demande.Contact.Nom} {vc.Demande.Contact.Prenom}",
+                         $"{vc.Demande.Statut}"));
+            }
+
+            return Forma.Center($"Liste des sorties de {Nom} [{i}]\n") + retVal;
+
 
         }
 
@@ -441,7 +468,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
                 info1 = Forma.Center("- [ ENTREE À FAIRE ] -\n\n", 100);
             }
 
-            string retVal =
+            string retVal = this.Id;/*
                 Forma.Center($"Fiche du pensionnaire n°[ {Id} ]\n", 102) +
                 Forma.Center(new string('-', 90) + $"\n") +
 
@@ -454,20 +481,42 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
                 Forma.Texta2("Sexe", $"{Sexe}") +
 
                 Forma.Texta2("Couleur Prim.", $"{Couleur.Nom}") +
-                Forma.Texta2("Couleur(s) Sec.", $"{Couleurs.Trim()}") +
+                Forma.Texta2("Couleur(s) Sec.", $"{CouleursString().Trim()}") +
 
                 Forma.Texta2("Steril", $"{ster}") +
                 Forma.Texta2("Steril", $"{dster}") +
 
                 Forma.Texta2("Description", $"{Description}") +
-                Forma.Texta2("Etat", $"{Statut}") +
+                Forma.Texta2("Etat", $"{Decision}") +
 
                 Forma.Texta2("Abri", Abri != null ? Abri.Libelle : "--");
 
-            retVal += "\n\n" + Vaccinations;
-            retVal += "\n\n" + Compatibilites;
+            retVal += "\n\n" + VaccinationsString();
+            retVal += "\n\n" + CompatibilitesString();*/
 
             return retVal;
+        }
+        public static List<SCompatible> TraitementSCompatible(Animal? animal)
+        {
+            List<SCompatible> sCompatible = [];
+
+            foreach (Compatibilite item in AllCompatibilite.LesStocks.Values)
+            {
+
+                SCompatible sCompatible1 = new();
+                sCompatible1._compatibilite = item;
+                sCompatible1.IsCompatible = $"Pas Verifier";
+
+                if(animal != null)
+                {
+                    sCompatible1.IsCompatible = animal.Compatible(item) != null? 
+                        (animal.Compatible(item).Compatible == true? "Oui" :"Non") : 
+                        "Pas Verifier";
+                }
+
+                sCompatible.Add(sCompatible1);
+            }
+            return sCompatible;
         }
 
         public IEnumerable<AnimalCompatibilité> GetCompatibilite()
@@ -614,7 +663,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
 
             return ret;
         }
-        public string Update(TypeAnimal type, string? nom, ESexe? sexe, DateTime? datnais, bool? steril,string? desc, string? partic)
+        public string Update(TypeAnimal type, string? nom, ESexe? sexe, DateTime? datnais, bool? steril,DateTime? dteSterile ,string? desc, string? partic,Abri? abri)
         {
             string retVal = $"Modification(s) effectuée(s) sur --{Nom}--\n";
 
@@ -648,6 +697,12 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
                 retVal += $"Sterilité modifié: {Sterile}\n";
             }
 
+            if (DateSterilisation != dteSterile)
+            {
+                DateSterilisation = Sterile == false ? null : dteSterile;
+                retVal += $"Date Sterilisation modifié: {Sterile}\n";
+            }
+
             if (desc != "--")
             {
                 Description = desc;
@@ -658,6 +713,11 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
             {
                 Particularite = partic;
                 retVal += $"Particularite modifié: {desc}\n";
+            }
+
+            if(abri != null)
+            {
+                this.AddAbri(abri);
             }
 
             AllAnimal.DB_Update(this);
@@ -762,12 +822,12 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
             Forma.ParametreNullTesteur(couleur);
 
             string id = Id + couleur.Id;
-
-            if (!HaveCouleur(couleur))
+            AnimalCouleur? animalCouleur = AllAnimalCouleur.Find(id);
+            if (animalCouleur == null)
             {
                 ExceptionLauncher.New("Animal Delete Couleur", Nom + $" n'a pas cette couleur {couleur.Nom}");
             }
-            AllAnimalCouleur.Delete(id);
+            AllAnimalCouleur.Delete(animalCouleur);
         }
 
         public int AddAbri(Abri abri)

@@ -19,7 +19,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
             DateCreation = DateTime.Now;
             DateDebut = null;
             DateFin = null;
-            Statut = EStatutValidation.EN_COURS;
+            Decision = EStatutValidation.EN_COURS;
             Info = infos;
             Demande = demande;
 
@@ -60,7 +60,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
                 _dateDebut = value;
             }
         }
-        public EStatutValidation Statut
+        public EStatutValidation Decision
         {
             get { return _statut; }
             set { _statut = value; }
@@ -72,7 +72,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
             {
                 if (value.Type != ETypeDemande.ACCUEIL)
                 {
-                    ExceptionLauncher.New("Accueil Demande", $"La demande n'est pas valide. - Statut : {value.Statut} - MyType : {value.Type}");
+                    ExceptionLauncher.New("Accueil Demande", $"La demande n'est pas valide. - Decision : {value.Statut} - MyType : {value.Type}");
                 }
                 _demande = value;
             }
@@ -102,9 +102,9 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         public override string ToString()
         {
             string? info = null;
-            if (Statut > EStatutValidation.EN_COURS)
+            if (Decision > EStatutValidation.EN_COURS)
             {
-                info = $"- [ {Statut} ] -";
+                info = $"- [ {Decision} ] -";
 
                 if (Sortie == null)
                 {
@@ -117,7 +117,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
                 info = Forma.Center(info + "\n\n", 100);
             }
 
-            string retVal =
+            string retVal = this.Id;/*
                 Forma.Center($"FICHE D'ACCUEIL N° [ {Id} ]\n") +
                 Forma.Center(new string('-', 90) + $"\n") +
 
@@ -129,11 +129,11 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
                 Forma.Texta2("Nom animal", Demande.Animal.Nom) +
                 Forma.Texta2("GetUnType animal", Demande.Animal.Type.Nom + "\n") +
                 Forma.Texta2("Demande id", Demande.Id) +
-                Forma.Texta2("Contact", Demande.Contact.Nom) +
-                Forma.Texta2("Statut", Statut.ToString() + "\n") +
+                Forma.Texta2("ContactSelectionne", Demande.ContactSelectionne.Nom) +
+                Forma.Texta2("Decision", Decision.ToString() + "\n") +
                 Forma.Texta2("Date Debut", DateDebut == null ? "--" : DateDebut.ToString()) +
                 Forma.Texta2("Date Fin.", DateFin == null ? "--" : DateFin.ToString()) +
-                Forma.Texta2("Raison", DateFin == null ? "--" : RaisonAnullation);
+                Forma.Texta2("Raison", DateFin == null ? "--" : RaisonAnullation);*/
             return retVal;
         }
 
@@ -178,7 +178,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
             }
 
 
-            Statut = EStatutValidation.ACCEPTEE;
+            Decision = EStatutValidation.ACCEPTEE;
             DateDebut = DateTime.Now;
             Demande.Update(EStatutDemande.EN_COURS);
             AllAccueil.DB_Update(this);
@@ -197,12 +197,12 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
                 ExceptionLauncher.New("Accueil Refuser", "Cette demande est Terminee");
             }
 
-            if (AllAdoption.Find(Id) == null)
+            if (AllAccueil.Find(Id) == null)
             {
                 ExceptionLauncher.New("Accueil Refuser", "Cette accueil n'est pas enregistré");
             }
 
-            Statut = EStatutValidation.REFUSEE;
+            Decision = EStatutValidation.REFUSEE;
             DateFin = DateTime.Now;
             RaisonAnullation = motif;
             Demande.Update(EStatutDemande.TERMINEE);
@@ -222,12 +222,12 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
                 ExceptionLauncher.New("Accueil Indecis", "Cette demande est Terminee");
             }
 
-            if (AllAdoption.Find(Id) == null)
+            if (AllAccueil.Find(Id) == null)
             {
                 ExceptionLauncher.New("Accueil Indecis", "Cette accueil n'est pas enregistré");
             }
 
-            Statut = EStatutValidation.EN_COURS;
+            Decision = EStatutValidation.EN_COURS;
             DateDebut = null;
             DateFin = null;
             RaisonAnullation = null;
@@ -286,12 +286,12 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         private static int Sync(Accueil accueil)
         {
             int ret;
-            if (accueil.Statut == EStatutValidation.REFUSEE)
+            if (accueil.Decision == EStatutValidation.REFUSEE)
             {
                 ret = accueil.Demande.Update(EStatutDemande.TERMINEE);
 
             }
-            else if (accueil.Statut == EStatutValidation.EN_COURS)
+            else if (accueil.Decision == EStatutValidation.EN_COURS)
             {
                 ret = accueil.Demande.Update(EStatutDemande.VALIDATION);
             }

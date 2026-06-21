@@ -96,15 +96,14 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         }
         public int Update(string details, string nom)
         {
-            int retval = 0;
             if (AllCompatibilite.FindByNom(Forma.TrimUpper(nom)) == null)
             {
                 Nom = nom;
-                Details = details;
 
-                retval = AllCompatibilite.DB_Update(this);
             }
-            return retval;
+                Details = details;
+            
+            return AllCompatibilite.DB_Update(this);
         }
         public static int Delete(Compatibilite compatibilite)
         {

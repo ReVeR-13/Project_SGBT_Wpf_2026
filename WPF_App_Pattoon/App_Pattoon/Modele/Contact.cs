@@ -171,7 +171,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
 
         public Dictionary<string, TypeContact_Contact> ListeRoles
         {
-            get { return this._roles; }
+            get { return AllTypeContact_Contact.AllOfContact(this); }
         }
 
         public int TypeCount
@@ -207,7 +207,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         {
             int i = 0;
             string retVal =
-                Forma.Text("N°", "Id", "Date Crea.", "Statut", "Remarque");
+                Forma.Text("N°", "Id", "Date Crea.", "Decision", "Remarque");
 
             if (GetAllDemandes().Count > 0)
             {
@@ -230,7 +230,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         public string ListeDemandesByStatutString(EStatutDemande eStatut)
         {
             int i = 0;
-            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Statut", "Remarque");
+            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Decision", "Remarque");
 
             if (GetAllDemandes().Count > 0)
             {

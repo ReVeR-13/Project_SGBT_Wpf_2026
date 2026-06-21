@@ -26,7 +26,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             {
                 int i = 0;
                 string retVal = $"Liste des Entrees [{Count}]\n" +
-                Forma.Text("N°", "Id", "Date Crea.", "Motifs", "Id Demande", "Contact", "Id Animal", "Nom Animal");
+                Forma.Text("N°", "Id", "Date Crea.", "Motifs", "Id Demande", "ContactSelectionne", "Id Animal", "Nom Animal");
                 foreach (Entree vc in _lesEntres.Values.OrderByDescending(a => a.DateCreation))
                 {
                     i++;
@@ -50,7 +50,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             {
                 int i = 0;
                 string retVal = $"Liste des Entrees [{Count}]\n" +
-                Forma.Text("N°", "Id", "Date Crea.", "Motifs", "Id Demande", "Contact", "Id Animal", "Nom Animal");
+                Forma.Text("N°", "Id", "Date Crea.", "Motifs", "Id Demande", "ContactSelectionne", "Id Animal", "Nom Animal");
                 foreach (Entree vc in _lesEntres.Values.OrderByDescending(ob => ob.DateCreation).Take(10))
                 {
                     i++;
@@ -83,14 +83,14 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         }
         public static IEnumerable<Entree> Get(Animal animal)
         {
-            foreach (Entree en in Get().Where(a => a.Demande.Animal == animal).OrderByDescending(v => v.DateCreation))
+            foreach (Entree en in Get().Where(a => a.Demande.Animal.Id == animal.Id).OrderByDescending(v => v.DateCreation))
             {
                 yield return en;
             }
         }
         public static IEnumerable<Entree> Get(Contact contact)
         {
-            foreach (Entree en in Get().Where(a => a.Demande.Contact == contact).OrderByDescending(v => v.DateCreation))
+            foreach (Entree en in Get().Where(a => a.Demande.Contact.Id == contact.Id).OrderByDescending(v => v.DateCreation))
             {
                 yield return en;
             }
@@ -114,7 +114,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             Entree? entree = null;
             foreach (Entree e in _lesEntres.Values)
             {
-                if (e.Demande == demande)
+                if (e.Demande.Id == demande.Id)
                 {
                     entree = e;
                     break;
@@ -208,7 +208,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             {
                 int i = 0;
                 string retVal = $"Liste des Sorties [{Count}]\n" +
-                Forma.Text("N°", "Id", "Date Crea.", "Motifs", "Id Demande", "Contact", "Id Animal", "Nom Animal");
+                Forma.Text("N°", "Id", "Date Crea.", "Motifs", "Id Demande", "ContactSelectionne", "Id Animal", "Nom Animal");
                 foreach (Sortie vc in _lesSorties.Values)
                 {
                     i++;
@@ -234,7 +234,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             {
                 int i = 0;
                 string retVal = $"Liste des 10 dernières Sorties [{Count}]\n" +
-                Forma.Text("N°", "Id", "Date Crea.", "Motifs", "Id Demande", "Contact", "Id Animal", "Nom Animal");
+                Forma.Text("N°", "Id", "Date Crea.", "Motifs", "Id Demande", "ContactSelectionne", "Id Animal", "Nom Animal");
                 foreach (Sortie vc in _lesSorties.Values.OrderByDescending(ob => ob.DateCreation).Take(10))
                 {
                     i++;
@@ -268,14 +268,14 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         }
         public static IEnumerable<Sortie> Get(Animal animal)
         {
-            foreach (Sortie sort in Get().Where(a => a.Demande.Animal == animal).OrderByDescending(v => v.DateCreation))
+            foreach (Sortie sort in Get().Where(a => a.Demande.Animal.Id == animal.Id).OrderByDescending(v => v.DateCreation))
             {
                 yield return sort;
             }
         }
         public static IEnumerable<Sortie> Get(Contact contact)
         {
-            foreach (Sortie sort in Get().Where(a => a.Demande.Contact == contact).OrderByDescending(v => v.DateCreation))
+            foreach (Sortie sort in Get().Where(a => a.Demande.Contact.Id == contact.Id).OrderByDescending(v => v.DateCreation))
             {
                 yield return sort;
             }
@@ -296,7 +296,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             Sortie? sortie = null;
             foreach (Sortie s in _lesSorties.Values)
             {
-                if (s.Demande == demande)
+                if (s.Demande.Id == demande.Id)
                 {
                     sortie = s;
                     break;

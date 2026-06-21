@@ -11,9 +11,7 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
         {
             Dictionary<string, Adoption> retval = new Dictionary<string, Adoption>();
 
-            using NpgsqlCommand sqlcmd = new NpgsqlCommand($"select * " +
-                                                           $"from t_adoption " +
-                                                           $"order by id_adoption ",
+            using NpgsqlCommand sqlcmd = new NpgsqlCommand(DB_Convertisseur.SelectFrom("f_All_adoption()"),
                                                            AccessDB.SqlConn);
 
             try
@@ -22,21 +20,21 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
                 while (reader.Read())
                 {
 
-                    string id = DB_Convertisseur.String(reader, "id_adoption");
-                    DateTime? dateCreation = DB_Convertisseur.Date(reader, "date_creation");
-                    string detail = DB_Convertisseur.String(reader, "details");
-                    EStatutValidation? statut = DB_Convertisseur.StatutValidation(reader, "statut");
-                    Demande? demande = DB_Convertisseur.Demande(reader, "id_demande");
-                    DateTime? dateD = DB_Convertisseur.Date(reader, "date_debut");
-                    DateTime? dateF = DB_Convertisseur.Date(reader, "date_fin"); 
-                    string? refus = DB_Convertisseur.String(reader, "raison_refus");
+                    string id = DB_Convertisseur.String(reader, "id");
+                    DateTime? dateCreation = DB_Convertisseur.Date(reader, "_date");
+                    string detail = DB_Convertisseur.String(reader, "_details");
+                    EStatutValidation? statut = DB_Convertisseur.StatutValidation(reader, "_statut");
+                    Demande? demande = DB_Convertisseur.Demande(reader, "_id_demande");
+                    DateTime? dateD = DB_Convertisseur.Date(reader, "_dte_debut");
+                    DateTime? dateF = DB_Convertisseur.Date(reader, "_dte_fin"); 
+                    string? refus = DB_Convertisseur.String(reader, "_refus");
 
                     if (demande != null && statut != null)
                     {
                         Adoption tpe = Adoption.Creer(demande, detail);
                         tpe.Id = id;
                         tpe.DateCreation = (DateTime)dateCreation;
-                        tpe.Statut = (EStatutValidation)statut;
+                        tpe.Decision = (EStatutValidation)statut;
                         tpe.DateD = dateD;
                         tpe.DateF = dateF;
                         tpe.RaisonRefus = refus;
@@ -61,9 +59,7 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
         {
             Adoption? retval = null;
 
-            using NpgsqlCommand sqlcmd = new NpgsqlCommand($"select * " +
-                                                           $"from t_adoption " +
-                                                           $"where id_adoption = @id ",
+            using NpgsqlCommand sqlcmd = new NpgsqlCommand(DB_Convertisseur.SelectFrom("f_One_adoption(@id)"),
                                                            AccessDB.SqlConn);
 
             try
@@ -77,20 +73,20 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
                 using NpgsqlDataReader reader = sqlcmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    string id = DB_Convertisseur.String(reader, "id_adoption");
-                    DateTime? dateCreation = DB_Convertisseur.Date(reader, "date_creation");
-                    string detail = DB_Convertisseur.String(reader, "details");
-                    EStatutValidation? statut = DB_Convertisseur.StatutValidation(reader, "statut");
-                    Demande? demande = DB_Convertisseur.Demande(reader, "id_demande");
-                    DateTime? dateD = DB_Convertisseur.Date(reader, "date_debut");
-                    DateTime? dateF = DB_Convertisseur.Date(reader, "date_fin");
-                    string? refus = DB_Convertisseur.String(reader, "raison_refus");
+                    string id = DB_Convertisseur.String(reader, "id");
+                    DateTime? dateCreation = DB_Convertisseur.Date(reader, "_date");
+                    string detail = DB_Convertisseur.String(reader, "_details");
+                    EStatutValidation? statut = DB_Convertisseur.StatutValidation(reader, "_statut");
+                    Demande? demande = DB_Convertisseur.Demande(reader, "_id_demande");
+                    DateTime? dateD = DB_Convertisseur.Date(reader, "_dte_debut");
+                    DateTime? dateF = DB_Convertisseur.Date(reader, "_dte_fin");
+                    string? refus = DB_Convertisseur.String(reader, "_refus");
 
                     if (demande != null && statut != null)
                     {
                         retval = Adoption.Creer(demande, detail);
                         retval.DateCreation = (DateTime)dateCreation;
-                        retval.Statut = (EStatutValidation)statut;
+                        retval.Decision = (EStatutValidation)statut;
                         retval.DateD = dateD == null ? null : dateD;
                         retval.DateF = dateF == null ? null : dateF;
                         retval.Id = id;
@@ -139,7 +135,7 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
                         retval = Adoption.Creer(fdemande, detail);
                         retval.Id = id;
                         retval.DateCreation = (DateTime)dateCreation;
-                        retval.Statut = (EStatutValidation)statut;
+                        retval.Decision = (EStatutValidation)statut;
                         retval.DateD = (DateTime)dateD;
                         retval.DateF = (DateTime)dateF;
                         retval.RaisonRefus = refus;
@@ -157,19 +153,12 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
 
         public static int Add(Adoption adoption)
         {
-            string cmdtext = "insert into t_adoption(id_adoption, date_creation, details, statut, id_demande, date_debut, date_fin, raison_refus ) " +
-                "values (@id, @date, @detail, @statut::e_statut_adoption, @iddm, @dtedebut , @dtefin, @refus) ";
+            string cmdtext = DB_Convertisseur.SelectFrom("f_create_adoption(@iddm,@detail)");
 
             var parametres = new Dictionary<string, (NpgsqlTypes.NpgsqlDbType Type, object Value)>
             {
-                { "@date",(NpgsqlTypes.NpgsqlDbType.Date, adoption.DateCreation) },
-                { "@id",(NpgsqlTypes.NpgsqlDbType.Varchar, adoption.Id) },
                 { "@detail",(NpgsqlTypes.NpgsqlDbType.Varchar, adoption.Info) },
-                { "@statut",(NpgsqlTypes.NpgsqlDbType.Varchar , adoption.Statut.ToString()) },
                 { "@iddm",(NpgsqlTypes.NpgsqlDbType.Varchar , adoption.Demande.Id) },
-                { "@dtedebut",(NpgsqlTypes.NpgsqlDbType.Date , adoption.DateD) },
-                { "@dtefin",(NpgsqlTypes.NpgsqlDbType.Date , adoption.DateF) },
-                { "@refus",(NpgsqlTypes.NpgsqlDbType.Varchar, adoption.RaisonRefus) },
             };
 
             return Requets.ExecuteNonQuery(cmdtext, parametres);
@@ -178,16 +167,14 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
         public static int Update(Adoption adoption)
         {
 
-            string cmdtext = "update t_adoption set details = @detail, statut = @statut::e_statut_adoption, " +
-                "id_demande =@iddm ,date_debut = @dtedebut ,date_fin = @dtefin, raison_refus = @refus " +
-                "where id_adoption = @id ";
+            string cmdtext = DB_Convertisseur.SelectFrom("f_update_adoption(@id,@statut::e_statut_adoption,@dtedebut,@dtefin,@refus,@detail)") ;
 
             var parametres = new Dictionary<string, (NpgsqlTypes.NpgsqlDbType Type, object Value)>
             {
                 { "@id",(NpgsqlTypes.NpgsqlDbType.Varchar, adoption.Id) },
                 { "@detail",(NpgsqlTypes.NpgsqlDbType.Varchar, adoption.Info) },
                 { "@refus",(NpgsqlTypes.NpgsqlDbType.Varchar, adoption.RaisonRefus) },
-                { "@statut",(NpgsqlTypes.NpgsqlDbType.Varchar , adoption.Statut.ToString()) },
+                { "@statut",(NpgsqlTypes.NpgsqlDbType.Varchar , adoption.Decision.ToString()) },
                 { "@iddm",(NpgsqlTypes.NpgsqlDbType.Varchar , adoption.Demande.Id) },
                 { "@dtedebut",(NpgsqlTypes.NpgsqlDbType.Date , adoption.DateD) },
                 { "@dtefin",(NpgsqlTypes.NpgsqlDbType.Date , adoption.DateF) }
@@ -198,7 +185,7 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
         }
         public static int Delete(Adoption adoption)
         {
-            string cmdtext = "delete from t_adoption where id_adoption = @id";
+            string cmdtext = DB_Convertisseur.SelectFrom("f_delete_adoption(@id)");
 
             var parametres = new Dictionary<string, (NpgsqlTypes.NpgsqlDbType Type, object Value)>
             {

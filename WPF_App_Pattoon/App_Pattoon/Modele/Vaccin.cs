@@ -84,14 +84,13 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         }
         public int Modifier(string nom, string description)
         {
-            int retval = 0;
             if (AllVaccin.FindByNom(nom)== null)
             {
                 Nom = nom;
-                Description = description;
-                retval = AllVaccin.DB_Update(this);
             }
-            return retval;
+                Description = description;
+            return  AllVaccin.DB_Update(this);
+            
         }
         public static int Delete(Vaccin vaccin)
         {

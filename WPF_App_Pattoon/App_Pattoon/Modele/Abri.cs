@@ -98,26 +98,27 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
             int result = 0;
             if (AllAbri.Find(abri.Id) == null)
             {
-                AllAbri.Add(abri);
-
                 result = AllAbri.DB_Add(abri);
+                AllAbri.Add(abri);
             }
             return result;
         }
         public int Update(string libelle, EStatutAbri? statutAbri, string description)
         {
-            int modifier = 0;
-            if (!string.IsNullOrEmpty(libelle) || statutAbri != null)
+            if (AllAbri.FindbyNom(Forma.TrimUpper(libelle)) == null)
             {
                 Libelle = libelle;
-                Statut = (EStatutAbri)statutAbri;
-                Description = description;
-
-                AllAbri.DB_Update(this);
-
-                modifier = 1;
             }
-            return modifier;
+
+            if (statutAbri != Statut)
+            {
+                Statut = (EStatutAbri)statutAbri;
+            }
+
+            Description = description;
+
+            AllAbri.DB_Update(this);
+            return 1;
         }
         public int Update(EStatutAbri? statutAbri)
         {
@@ -144,12 +145,12 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         }
         public override string ToString()
         {
-            string retVal =
+            string retVal = this.Libelle; /*
                 Forma.Texta2("Date", DateCreation.ToString("dd-MM-yyyy")) +
                 Forma.Texta2("Id", Id) +
                 Forma.Texta2("Nom", Libelle) +
-                Forma.Texta2("Statut", Statut.ToString());
-                Forma.Texta2("Description", Description);
+                Forma.Texta2("Decision", Decision.ToString());
+                Forma.Texta2("Description", Description);*/
 
             return retVal;
         }

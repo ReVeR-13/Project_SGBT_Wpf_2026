@@ -12,9 +12,7 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
         {
             Dictionary<string, Accueil> retval = new();
 
-            using NpgsqlCommand sqlcmd = new NpgsqlCommand($"select * " +
-                                                           $"from t_accueil " +
-                                                           $"order by id_accueil ",
+            using NpgsqlCommand sqlcmd = new NpgsqlCommand(DB_Convertisseur.SelectFrom("f_All_accueil()"),
                                                            AccessDB.SqlConn);
 
             try
@@ -23,21 +21,21 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
                 while (reader.Read())
                 {
 
-                    string id = DB_Convertisseur.String(reader, "id_accueil");
-                    DateTime? dateCreation = DB_Convertisseur.Date(reader, "date_creation");
-                    string detail = DB_Convertisseur.String(reader, "details");
-                    EStatutValidation? statut = DB_Convertisseur.StatutValidation(reader, "statut");
-                    Demande? demande = DB_Convertisseur.Demande(reader, "id_demande");
-                    string? refus = DB_Convertisseur.String(reader, "raison_refus");
-                    DateTime? dteD = DB_Convertisseur.Date(reader, "date_debut");
-                    DateTime? dteF = DB_Convertisseur.Date(reader, "date_fin");
+                    string id = DB_Convertisseur.String(reader, "id");
+                    DateTime? dateCreation = DB_Convertisseur.Date(reader, "_date");
+                    string detail = DB_Convertisseur.String(reader, "_details");
+                    EStatutValidation? statut = DB_Convertisseur.StatutValidation(reader, "_statut");
+                    Demande? demande = DB_Convertisseur.Demande(reader, "_id_demande");
+                    string? refus = DB_Convertisseur.String(reader, "_refus");
+                    DateTime? dteD = DB_Convertisseur.Date(reader, "_dte_debut");
+                    DateTime? dteF = DB_Convertisseur.Date(reader, "_dte_fin");
 
                     if (demande != null)
                     {
                         Accueil tpe = Accueil.Creer(demande, detail);
                         tpe.Id = id;
                         tpe.DateCreation = (DateTime)dateCreation;
-                        tpe.Statut = (EStatutValidation)statut;
+                        tpe.Decision = (EStatutValidation)statut;
                         tpe.DateDebut = dteD;
                         tpe.DateFin = dteF;
                         tpe.RaisonAnullation = refus;
@@ -93,7 +91,7 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
                         retval = Accueil.Creer(demande, detail);
                         retval.Id = id;
                         retval.DateCreation = (DateTime)dateCreation;
-                        retval.Statut = (EStatutValidation)statut;
+                        retval.Decision = (EStatutValidation)statut;
                         retval.DateDebut = dteD;
                         retval.DateFin = dteF;
                         retval.RaisonAnullation = refus;
@@ -141,7 +139,7 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
                         retval = Accueil.Creer(fdemande, detail);
                         retval.Id = id;
                         retval.DateCreation = (DateTime)dateCreation;
-                        retval.Statut = (EStatutValidation)statut;
+                        retval.Decision = (EStatutValidation)statut;
                         retval.DateDebut = dteD;
                         retval.DateFin = dteF;
                         retval.RaisonAnullation = refus;
@@ -159,14 +157,13 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
 
         public static int Add(Accueil accueil)
         {
-            string cmdtext = "insert into t_accueil(id_accueil, date_creation, details, statut, id_demande, date_debut, date_fin, raison_refus  ) " +
-                                           "values (@id, @date, @detail, @statut::e_statut_accueil, @id_demande ,@date_debut , @date_fin ,@refus) ";
+            string cmdtext = DB_Convertisseur.SelectFrom("f_create_accueil(@id_demande,@detail)");
 
             var parametres = new Dictionary<string, (NpgsqlTypes.NpgsqlDbType Type, object Value)>
             {
                 { "@date",(NpgsqlTypes.NpgsqlDbType.Date, accueil.DateCreation) },
                 { "@detail",(NpgsqlTypes.NpgsqlDbType.Varchar, accueil.Info) },
-                { "@statut",(NpgsqlTypes.NpgsqlDbType.Varchar, accueil.Statut.ToString()) },
+                { "@statut",(NpgsqlTypes.NpgsqlDbType.Varchar, accueil.Decision.ToString()) },
                 { "@id",(NpgsqlTypes.NpgsqlDbType.Varchar , accueil.Id) },
                 { "@id_demande",(NpgsqlTypes.NpgsqlDbType.Varchar , accueil.Demande.Id) },
                 { "@refus",(NpgsqlTypes.NpgsqlDbType.Varchar , accueil.RaisonAnullation) },
@@ -188,7 +185,7 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
             var parametres = new Dictionary<string, (NpgsqlTypes.NpgsqlDbType Type, object Value)>
             {
                 { "@details",(NpgsqlTypes.NpgsqlDbType.Varchar, accueil.Info) },
-                { "@statut",(NpgsqlTypes.NpgsqlDbType.Varchar, accueil.Statut.ToString()) },
+                { "@statut",(NpgsqlTypes.NpgsqlDbType.Varchar, accueil.Decision.ToString()) },
                 { "@id",(NpgsqlTypes.NpgsqlDbType.Varchar , accueil.Id) },
                 { "@id_demande",(NpgsqlTypes.NpgsqlDbType.Varchar , accueil.Demande.Id) },
                 { "@raison_refus",(NpgsqlTypes.NpgsqlDbType.Varchar , accueil.RaisonAnullation) },

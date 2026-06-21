@@ -19,7 +19,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         }
         public static void Add(Abri abri)
         {
-            if (Find(abri.Libelle) != null)
+            if (FindbyNom(abri.Libelle) != null)
             {
                 ExceptionLauncher.New("Add AllAbri", "Cet nom d'abri existe deja");
             }
@@ -30,7 +30,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         public static int DB_Add(Abri abri)
         {
             int ret = 0;
-            if (DB_Abri.UnAbriByNom_db(abri.Libelle) == null)
+            if (FindbyNom(abri.Libelle) == null)
             {
                 ret = DB_Abri.Add(abri);
             }
@@ -95,7 +95,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             {
                 int i = 0;
                 string retVal = $"Liste des Abris [{Count}]\n\n" +
-                    Forma.Text("N°", "Id", "Date Crea.", "Libelle", "Statut", "Desciption");
+                    Forma.Text("N°", "Id", "Date Crea.", "Libelle", "Decision", "Desciption");
                 foreach (Abri a in _lesAbris.Values)
                 {
                     i++;

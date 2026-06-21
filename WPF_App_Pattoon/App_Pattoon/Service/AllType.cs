@@ -67,41 +67,27 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         {
             if (FindByNom(type.Nom) != null)
             {
-                ExceptionLauncher.New("MyType Contact", "Cet type existe deja...");
+                ExceptionLauncher.New("Type ContactSelectionne", "Cet type existe deja...");
             }
             _lesTypesContacts.Add(type.Id, type);
             _numType++;
         }
         public static void Delete(TypeContact type)
         {
-            if (!_lesTypesContacts.ContainsKey(type.Id))
+            if (FindById(type.Id) == null)
             {
-                throw new Exception($"[Groupe Type Contact] Ce type de contact n' existe plus : {type.Nom}");
+                throw new Exception($"[Groupe Type ContactSelectionne] Ce type de contact n' existe plus : {type.Nom}");
             }
             _lesTypesContacts.Remove(type.Id);
         }
-        public static TypeContact FindByNom(string nom)
+        public static TypeContact? FindByNom(string nom)
         {
-            TypeContact type = null;
-            foreach (TypeContact t in _lesTypesContacts.Values)
-            {
-                if (t.Nom == Forma.TrimUpper(nom))
-                {
-                    type = t;
-                    break;
-                }
-            }
-
-            return type;
+            return _lesTypesContacts.Values.FirstOrDefault(a => a.Nom == Forma.TrimUpper(nom));
         }
-        public static TypeContact FindById(string id)
+        public static TypeContact? FindById(string id)
         {
-            TypeContact type = null;
-            if (_lesTypesContacts.ContainsKey(id.Trim().ToUpper()))
-            {
-                type = _lesTypesContacts[id.Trim().ToUpper()];
-            }
-            return type;
+            TypeContact? type = _lesTypesContacts.Values.Where(a => a.Id == Forma.TrimUpper(id)).FirstOrDefault();
+            return type ?? null;
         }
         public static string LesTypesContactsManquant(Contact contact)
         {
@@ -133,10 +119,28 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             return $"Liste des Types Contacts [{i}]\n\n" + retVal;
         }
 
+        public static Dictionary<string, TypeContact> LesRolesManquant(Contact contact)
+        {
+            int i = 0;
+            Dictionary<string, TypeContact> retVal = [];
+            foreach (TypeContact a in _lesTypesContacts.Values)
+            {
+                bool verif = contact.GetRolesListe().ContainsKey(a.Id);
+                
+                if (!verif)
+                {
+                    retVal.Add(a.Id,a);
+                }
+
+            }
+            return retVal;
+        }
+
+
         public static int DB_Add(TypeContact type)
         {
             int retval = 0;
-            if (DB_TypeContact.UnTypesContactByNom(type.Nom) == null)
+            if (DB_TypeContact.UnTypesContactById(type.Id) == null)
             {
                 retval = DB_TypeContact.Add(type);
 
@@ -146,7 +150,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         public static int DB_Update(TypeContact type)
         {
             int retval = 0;
-            if (DB_TypeContact.UnTypesContactByNom(type.Nom) != null)
+            if (DB_TypeContact.UnTypesContactById(type.Id) != null)
             {
                 retval = DB_TypeContact.Update(type);
 
@@ -156,10 +160,10 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         public static int DB_Delete(TypeContact type)
         {
             int retval = 0;
-            if (DB_TypeContact.UnTypesContactByNom(type.Nom) != null)
+            if (DB_TypeContact.UnTypesContactById(type.Id) != null)
             {
-                retval = DB_TypeContact.Delete(type.Nom);
-
+                DB_TypeContact.Delete(type.Id);
+                retval = DB_TypeContact.UnTypesContactById(type.Id) == null ? 1 : 0;
             }
             return retval;
         }

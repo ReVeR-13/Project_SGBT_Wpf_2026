@@ -159,22 +159,31 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
                 {
                     string id             = DB_Convertisseur.String(reader, "id_ct_tpecont");
                     DateTime dateCreation = (DateTime)DB_Convertisseur.Date(reader, "date_creation");
-                    Contact? cnt         = AllContacts.Find(DB_Convertisseur.String(reader, "id_contact"));
+                    Contact? cnt          = AllContacts.Find(DB_Convertisseur.String(reader, "id_contact"));
                     TypeContact? tpe      = AllTypeContact.FindById(DB_Convertisseur.String(reader, "id_type_contact"));
 
-                    TypeContact_Contact relation = TypeContact_Contact.Creer(cnt, tpe);
-                    relation.Id = id;
-                    relation.DateCreation = dateCreation;
+                    Console.WriteLine(DB_Convertisseur.String(reader, "id_type_contact"));
+
+                    if (cnt == null || tpe == null)
+                    {
+                        throw new Exception($"[DB_typeContact ContactSelectionne] Valeur retour DB null");
+                    }
+
+                    retval = TypeContact_Contact.Creer(cnt, tpe);
+                    retval.Id = id;
+                    retval.DateCreation = dateCreation;
 
                     if (cnt.GetUnType(tpe) == null)
                     {
-                        AllTypeContact_Contact.Add(relation);
+                        AllTypeContact_Contact.Add(retval);
                     }
 
                 }
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
+            
                 throw new ExceptionDB(sqlcmd.CommandText, ex.Message);
             }
 

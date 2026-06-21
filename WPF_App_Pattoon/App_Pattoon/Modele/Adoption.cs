@@ -18,7 +18,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
             _id = "ADO-" + demande.Id;
             _date = DateTime.Now;
             Demande = demande;
-            Statut = EStatutValidation.EN_COURS;
+            Decision = EStatutValidation.EN_COURS;
             DateD = null;
             DateF = null;
             _raisonRefus = null;
@@ -42,12 +42,12 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
             {
                 if (value.Type != ETypeDemande.ADOPTION )
                 {
-                    ExceptionLauncher.New("Adoption", $"Demande invalide : Statut {value.Statut} - GetUnType {value.Type}");
+                    ExceptionLauncher.New("Adoption", $"Demande invalide : Decision {value.Statut} - GetUnType {value.Type}");
                 }
                 _demande = value; 
             }
         }
-        public EStatutValidation Statut
+        public EStatutValidation Decision
         {
             get
             {
@@ -93,9 +93,9 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         public override string ToString()
         {
             string? info = null;
-            if (Statut > EStatutValidation.EN_COURS)
+            if (Decision > EStatutValidation.EN_COURS)
             {
-                info = $"- [ {Statut} ] -";
+                info = $"- [ {Decision} ] -";
 
                 if (Sortie == null)
                 {
@@ -108,7 +108,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
                 info = Forma.Center(info + "\n\n", 100);
             }
 
-            string retVal = 
+            string retVal = this.Id;/*
                 Forma.Center($"FICHE D'ADOPTION N° [ {Id} ]\n")+
                 Forma.Center(new string('-',90) + $"\n") +
 
@@ -118,8 +118,8 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
                 Forma.Texta2("ID", Id) +
                 Forma.Texta2("ID Demande", Demande.Id) + "\n" +
 
-                Forma.Texta2("Contact", $"{Demande.Contact.Nom} {Demande.Contact.Prenom}") +
-                Forma.Texta2("Gsm", Demande.Contact.Gsm) + "\n" +
+                Forma.Texta2("ContactSelectionne", $"{Demande.ContactSelectionne.Nom} {Demande.ContactSelectionne.Prenom}") +
+                Forma.Texta2("Gsm", Demande.ContactSelectionne.Gsm) + "\n" +
 
                 Forma.Texta2("Id Animal", $"{Demande.Animal.Id}") +
                 Forma.Texta2("Nom", Demande.Animal.Nom) + "\n" +
@@ -127,9 +127,9 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
                 Forma.Texta2("Date Debut", DateD == null ? "--" : DateD?.ToString("dd-MM-yyyy")) +
                 Forma.Texta2("Date Fin", DateF == null ? "--" : DateF?.ToString("dd-MM-yyyy")) + "\n" +
 
-                Forma.Texta2("Statut", $"{Statut}") +
+                Forma.Texta2("Decision", $"{Decision}") +
                 Forma.Texta2("Raison Refus", RaisonRefus ?? "--") +
-                Forma.Texta2("Infos", Info);
+                Forma.Texta2("Infos", Info);*/
 
             return retVal;
         }
@@ -159,7 +159,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
             int ret = 0;
             if (AllAdoption.Find(Id) != null)
             {
-                Statut = statut;
+                Decision = statut;
                 DateD = DateTime.Now;
                 ret = AllAdoption.DB_Update(this);
                 Sync(this);
@@ -186,7 +186,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
             int ret = 0;
             if (AllAdoption.Find(Id) != null)
             {
-                Statut = statut;
+                Decision = statut;
                 RaisonRefus = refus;
                 DateF = DateTime.Now;
                 ret = AllAdoption.DB_Update(this);
@@ -211,7 +211,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
                 ExceptionLauncher.New("Adoption Accepter", "Cette adoption n'est pas enregistré");
             }
 
-            Statut = EStatutValidation.ACCEPTEE;
+            Decision = EStatutValidation.ACCEPTEE;
             DateD = DateTime.Now;
             Demande.Update(EStatutDemande.EN_COURS);
             AllAdoption.DB_Update(this);
@@ -235,7 +235,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
                 ExceptionLauncher.New("Adoption Accepter", "Cette adoption n'est pas enregistré");
             }
 
-            Statut = EStatutValidation.REFUSEE;
+            Decision = EStatutValidation.REFUSEE;
             DateF = DateTime.Now;
             RaisonRefus = refus;
             Demande.Update(EStatutDemande.TERMINEE);
@@ -260,7 +260,7 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
                 ExceptionLauncher.New("Adoption Accepter", "Cette adoption n'est pas enregistré");
             }
 
-            Statut = EStatutValidation.EN_COURS;
+            Decision = EStatutValidation.EN_COURS;
             DateD = null;
             DateF = null;
             RaisonRefus = null;
@@ -308,11 +308,11 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         private static int Sync(Adoption adoption)
         {
             int ret;
-            if (adoption.Statut == EStatutValidation.REFUSEE)
+            if (adoption.Decision == EStatutValidation.REFUSEE)
             {
                 ret = adoption.Demande.Update(EStatutDemande.TERMINEE);
 
-            }else if (adoption.Statut == EStatutValidation.EN_COURS) 
+            }else if (adoption.Decision == EStatutValidation.EN_COURS) 
             {
                 ret = adoption.Demande.Update(EStatutDemande.VALIDATION);
             }

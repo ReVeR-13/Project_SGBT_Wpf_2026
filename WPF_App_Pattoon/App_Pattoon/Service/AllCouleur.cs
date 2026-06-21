@@ -146,7 +146,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             return couleur;
         }
 
-        public static string Manquants(Animal animal)
+        public static string ManquantsString(Animal animal)
         {
             int i = 0;
             Dictionary<string, AnimalCouleur> coloration = AllAnimalCouleur.FindAllByAnimal(animal);
@@ -180,6 +180,39 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             }
 
             return $"Liste des Couleurs manquants sur - {animal.Nom} - [{i}]\n" + retVal;
+        }
+        public static Dictionary<string, Couleur> Manquants(Animal animal)
+        {
+            Dictionary<string, AnimalCouleur> coloration = AllAnimalCouleur.FindAllByAnimal(animal);
+            Dictionary<string, Couleur> retVal = [];
+            foreach (Couleur c in _lesCouleurs.Values)
+            {
+                bool veri = true;
+
+                if (c == animal.Couleur)
+                {
+                    veri = false;
+                }
+                else
+                {
+                    foreach (AnimalCouleur ca in coloration.Values)
+                    {
+                        if (ca.Couleur == c)
+                        {
+                            veri = false;
+                        }
+                    }
+                }
+
+
+                if (veri)
+                {
+                    retVal.Add(c.Id,c);
+                }
+
+            }
+
+            return retVal;
         }
         public static IEnumerable<Couleur> Get()
         {

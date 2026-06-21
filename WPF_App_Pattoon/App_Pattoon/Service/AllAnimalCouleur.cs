@@ -74,9 +74,9 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             _lesAnimalCouleurs.Add(couleur.Id, couleur);
             return 1;
         }
-        public static int Delete(string id)
+        public static int Delete(AnimalCouleur couleur)
         {
-            string fid = Forma.TrimUpper(id);
+            string fid = Forma.TrimUpper(couleur.Id);
             if (Find(fid) == null)
             {
                 ExceptionLauncher.New("AllAnimalCouleur Delete", "cette application de couleur n 'existe pas");
@@ -92,7 +92,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             string fid = Forma.TrimUpper(id);
             if (_lesAnimalCouleurs.TryGetValue(fid, out AnimalCouleur? value))
             {
-                an = value;
+                an = _lesAnimalCouleurs[fid];
             }
             return an;
         }

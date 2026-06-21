@@ -10,7 +10,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
 {
     public static class AllAccueil
     {
-        private static readonly Dictionary<string, Accueil> _lesAccueils;
+        private static Dictionary<string, Accueil> _lesAccueils;
 
         static AllAccueil()
         {
@@ -26,7 +26,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             get
             {
                 int i = 0;
-                string retVal = Forma.Text("N°", "Id", "Date Crea.", "Statut", "Contact", "Date Annul.", "Raison");
+                string retVal = Forma.Text("N°", "Id", "Date Crea.", "Decision", "ContactSelectionne", "Date Annul.", "Raison");
 
                 foreach (Accueil dm in _lesAccueils.Values)
                 {
@@ -35,7 +35,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
                     $"{i}°",
                     $"{dm.Id}",
                     $"{dm.DateCreation:dd-MM-yyyy}",
-                    $"{dm.Statut}",
+                    $"{dm.Decision}",
                     $"{dm.Demande.Contact.Nom} {dm.Demande.Contact.Prenom}",
                     dm.DateFin == null ? "--" : dm.DateFin?.ToString("dd-MM-yyyy"),
                     dm.DateFin == null ? "--" : dm.RaisonAnullation);
@@ -49,18 +49,18 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         {
 
             int i = 0;
-            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Statut", "Contact", "Date Annul.", "Raison");
+            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Decision", "ContactSelectionne", "Date Annul.", "Raison");
 
             foreach (Accueil dm in _lesAccueils.Values)
             {
-                if (dm.Statut == eStatut)
+                if (dm.Decision == eStatut)
                 {
                     i++;
                     retVal += Forma.Text(
                     $"{i}°",
                     $"{dm.Id}",
                     $"{dm.DateCreation:dd-MM-yyyy}",
-                    $"{dm.Statut}",
+                    $"{dm.Decision}",
                     $"{dm.Demande.Contact.Nom} {dm.Demande.Contact.Prenom}",
                     dm.DateFin == null ? "--" : dm.DateFin?.ToString("dd-MM-yyyy"),
                     dm.DateFin == null ? "--" : dm.RaisonAnullation);
@@ -120,7 +120,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         {
             foreach (Accueil dema in _lesAccueils.Values)
             {
-                if (dema.Statut == eStatut)
+                if (dema.Decision == eStatut)
                 {
                     yield return dema;
                 }
@@ -129,10 +129,10 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         }
         public static IEnumerable<Accueil> Get(Contact contact, EStatutValidation eStatut)
         {
-            foreach (Accueil dema in _lesAccueils.Values.Where(a => a.Demande.Contact == contact && a.Statut == eStatut)
+            foreach (Accueil dema in _lesAccueils.Values.Where(a => a.Demande.Contact == contact && a.Decision == eStatut)
                 .OrderByDescending(a => a.DateCreation))
             {
-                if (dema.Statut == eStatut)
+                if (dema.Decision == eStatut)
                 {
                     yield return dema;
                 }
@@ -141,10 +141,10 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         }
         public static IEnumerable<Accueil> Get(Animal animal, EStatutValidation eStatut)
         {
-            foreach (Accueil dema in _lesAccueils.Values.Where(a => a.Demande.Animal == animal && a.Statut == eStatut)
+            foreach (Accueil dema in _lesAccueils.Values.Where(a => a.Demande.Animal == animal && a.Decision == eStatut)
                 .OrderByDescending(a => a.DateCreation))
             {
-                if (dema.Statut == eStatut)
+                if (dema.Decision == eStatut)
                 {
                     yield return dema;
                 }
@@ -277,6 +277,11 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             }
             return ret;
         }
+        public static void DB_Sync()
+        {
+            _lesAccueils = new Dictionary<string, Accueil> (DB_Accueil.All_From_Db());
+        }
+
 
     }
 

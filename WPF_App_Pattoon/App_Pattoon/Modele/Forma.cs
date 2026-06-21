@@ -1,5 +1,7 @@
-﻿using Wpf_App_Pattoon_Animalerie.Service;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using System.Windows;
+using Wpf_App_Pattoon_Animalerie.AccessDB;
+using Wpf_App_Pattoon_Animalerie.Service;
 
 
 namespace Wpf_App_Pattoon_Animalerie.Modele
@@ -211,6 +213,100 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
             {
                 ExceptionLauncher.New("Parametre Null Testeur", "Parametre null");
             }
+        }
+
+        public static void MsgInfo(string titre, string msg)
+        {
+            _ = MessageBox.Show
+                    (
+                        $"{msg}",
+                        $"{titre}",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information
+                    );
+        }
+        public static MessageBoxResult MsgValidation(string titre, string msg)
+        {
+            MessageBoxResult msgBox = MessageBox.Show
+                    (
+                        $"{msg}",
+                        $"{titre}",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question
+                    );
+            return msgBox;
+        }
+
+        public static string InfoDemande(Demande? demande)
+        {
+            string ret = $"[ Etape 1/5 ] Selectionner / Créer une demande";
+            if (demande != null)
+            {
+                switch (demande.Statut)
+                {
+                    case EStatutDemande.EXAMINATION:
+                        {
+                            ret = $"[ Etape 2/5 ] {demande.Type} : a créé pour cette demande n° [ {demande.Id} ]";
+                        }
+                        break;
+                    case EStatutDemande.VALIDATION:
+                        {
+                            ret = $"[ Etape 3/5 ] Cette Demande est en attente de Decision : voir [ {demande.Type} ] ";
+                        }
+                        break;
+                    case EStatutDemande.EN_COURS:
+                        {
+
+                            ret = $"[ Etape 4/5 ] Une Sortie/Entrée doit etre créé pour cette demande n° {demande.Id}";
+
+                        }
+                        break;
+                    case EStatutDemande.TERMINEE:
+                        {
+                            ret = $"[ Etape 5/5 ] Cette demande est Terminée {demande.Id}";
+                        }
+                        break;
+                    case EStatutDemande.ANNULEE:
+                        {
+                            ret = $"[ Etape X/5 ] Cette demande est Annulléé {demande.Id}";
+                        }
+                        break;
+
+                }
+            }
+
+            return ret;
+        }
+
+        public static void SyncAllWithDB()
+        {
+            DB_Couleur.All_From_db();
+            DB_Abri.All_From_db();
+            DB_TypeAnimal.AllTypesAnimal();
+            DB_Animal.Db_listeAnimaux();
+
+            DB_TypeContact.All_From_Db();
+            DB_Contact.All_From_Db();
+            DB_TypeCnt_Contact.AllRoles();
+            DB_AnimalCouleur.All_From_Db();
+
+            DB_Vaccin.All_From_Db();
+            DB_Vaccination.All_From_Db();
+
+            DB_Compatibilite.All_From_Db();
+            DB_AnimalCompatibilité.All_From_Db();
+
+            DB_Demande.All_From_Db();
+
+            DB_MotifEntree.All_From_Db();
+            DB_MotifSortie.All_From_Db();
+
+            DB_Entree.All_From_Db();
+            DB_Sortie.All_From_Db();
+
+            DB_Adoption.All_From_Db();
+            DB_Accueil.All_From_Db();
+            DB_User.All_From_Db();
         }
     }
 }

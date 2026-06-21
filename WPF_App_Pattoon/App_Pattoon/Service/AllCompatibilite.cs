@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Wpf_App_Pattoon_Animalerie.AccessDB;
+﻿using Wpf_App_Pattoon_Animalerie.AccessDB;
 using Wpf_App_Pattoon_Animalerie.Modele;
 
 namespace Wpf_App_Pattoon_Animalerie.Service
@@ -59,7 +54,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             get { DB_Sync(); return _lesCompatibilites; }
         }
 
-        public static string Manquants(Animal ami)
+        public static string ManquantsString(Animal ami)
         {
             int i = 0;
             string retVal = Forma.Padding(new string('-', 90)) + "\n" +
@@ -90,6 +85,32 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             }
 
             return Forma.Center($"Liste des Compatibilités manquants [{i}/{Count}]\n") + retVal;
+        }
+        public static Dictionary<string, Compatibilite> Manquants(Animal ami)
+        {
+            Dictionary<string, Compatibilite> retVal = [];
+
+            foreach (Compatibilite vc in _lesCompatibilites.Values)
+            {
+                bool veri = true;
+
+                foreach (AnimalCompatibilité va in AnimalCompatibilitéService.FindAllByAnimal(ami).Values)
+                {
+                    if (va.Compatibilite.Id == vc.Id)
+                    {
+                        veri = false;
+                    }
+                }
+
+                if (veri)
+                {
+                   
+                    retVal.Add(vc.Id,vc);
+                }
+
+            }
+
+            return retVal;
         }
         public static IEnumerable<Compatibilite> Get()
         {
@@ -151,12 +172,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         }
         public static int DB_Update(Compatibilite comp)
         {
-            int ret = 0;
-            if (DB_Compatibilite.UnCompatibiliteById(comp.Id) != null)
-            {
-                ret = DB_Compatibilite.Update(comp);
-            }
-            return ret;
+            return DB_Compatibilite.Update(comp);
         }
         public static int DB_Delete(Compatibilite comp)
         {

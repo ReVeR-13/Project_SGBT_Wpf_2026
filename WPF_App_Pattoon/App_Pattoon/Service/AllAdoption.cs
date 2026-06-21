@@ -10,7 +10,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
 {
     public static class AllAdoption
     {
-        private static readonly Dictionary<string, Adoption> _lesAdoptions;
+        private static  Dictionary<string, Adoption> _lesAdoptions;
 
         static AllAdoption()
         {
@@ -28,7 +28,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
                 int i = 0;
                 string retVal = $"Liste des Adoptions [{Count}]\n" +
                     string.Format($"{"{0,-4} {1,-19} {2,-11} {3,-11} {4,-16} {5,-20} {6,-10} {7,-10}\n"}",
-                                     "N°", "Id", "Date Crea.", "Statut", "Id Demande", "Contact", "Date Fin", "Raison Refus");
+                                     "N°", "Id", "Date Crea.", "Decision", "Id Demande", "ContactSelectionne", "Date Fin", "Raison Refus");
                 foreach (Adoption vc in _lesAdoptions.Values)
                 {
                     i++;
@@ -36,7 +36,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
                              $"{i}",
                              $"{vc.Id}",
                              $"{vc.DateCreation.ToString("dd-MM-yyyy")}",
-                             $"{vc.Statut}",
+                             $"{vc.Decision}",
                              $"{vc.Demande.Id}",
                              $"{vc.Demande.Contact.Nom} {vc.Demande.Contact.Prenom}",
                              vc.DateF == null ? "--" : vc.DateF?.ToString("dd-MM-yyyy"),
@@ -46,6 +46,11 @@ namespace Wpf_App_Pattoon_Animalerie.Service
                 return retVal;
             }
         }
+        public static Dictionary<string, Adoption> ListAllAdoptions
+        {
+            get { return _lesAdoptions; }
+        }
+
 
         public static IEnumerable<Adoption> Get()
         {
@@ -74,17 +79,17 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         }
         public static IEnumerable<Adoption> Get(EStatutValidation validation)
         {
-            foreach (Adoption dem in Get().Where(a => a.Statut == validation))
+            foreach (Adoption dem in Get().Where(a => a.Decision == validation))
             {
                 yield return dem;
             }
         }
         public static IEnumerable<Adoption> Get(Contact contact, EStatutValidation eStatut)
         {
-            foreach (Adoption dema in Get().Where(a => a.Demande.Contact == contact && a.Statut == eStatut)
+            foreach (Adoption dema in Get().Where(a => a.Demande.Contact == contact && a.Decision == eStatut)
                 .OrderByDescending(a => a.DateCreation))
             {
-                if (dema.Statut == eStatut)
+                if (dema.Decision == eStatut)
                 {
                     yield return dema;
                 }
@@ -93,10 +98,10 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         }
         public static IEnumerable<Adoption> Get(Animal animal, EStatutValidation eStatut)
         {
-            foreach (Adoption dema in Get().Where(a => a.Demande.Animal == animal && a.Statut == eStatut)
+            foreach (Adoption dema in Get().Where(a => a.Demande.Animal == animal && a.Decision == eStatut)
                 .OrderByDescending(a => a.DateCreation))
             {
-                if (dema.Statut == eStatut)
+                if (dema.Decision == eStatut)
                 {
                     yield return dema;
                 }
@@ -196,6 +201,11 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             }
             return ret;
         }
+        public static void DB_Sync()
+        {
+            _lesAdoptions = new Dictionary<string, Adoption> (DB_Adoption.All_From_Db());
+        }
+
 
     }
 }

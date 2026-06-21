@@ -11,8 +11,7 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
         {
             Dictionary<string, Animal> retval = [];
 
-            using NpgsqlCommand sqlcmd = new($"select * from t_animal " +
-                $"order by id_animal",
+            using NpgsqlCommand sqlcmd = new(DB_Convertisseur.SelectFrom("f_All_animal()"),
                 AccessDB.SqlConn);
 
             try
@@ -21,21 +20,21 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
                 while (reader.Read())
                 {
 
-                    string? id                  = DB_Convertisseur.String(reader,"id_animal");
-                    DateTime? dateCreation      = DB_Convertisseur.Date( reader,"date_creation");
-                    string? nom                 = DB_Convertisseur.String(reader, "nom_animal");
-                    string? sexe                = DB_Convertisseur.String(reader, "sexe");
-                    Couleur? couleur            = DB_Convertisseur.Couleur(reader, "couleur");
-                    DateTime? dateNaissance     = DB_Convertisseur.Date(reader, "date_naissance");
-                    DateTime? dateDeces         = DB_Convertisseur.Date(reader,"date_deces");
-                    bool Sterile                = DB_Convertisseur.Bool(reader, "sterile");
-                    DateTime? DateSterilisation = DB_Convertisseur.Date(reader, "date_sterile");
-                    string? Particularite       = DB_Convertisseur.String(reader, "particularité");
-                    string? Description         = DB_Convertisseur.String(reader, "description");
+                    string? id                  = DB_Convertisseur.String(reader, "id");
+                    DateTime? dateCreation      = DB_Convertisseur.Date( reader, "_date");
+                    string? nom                 = DB_Convertisseur.String(reader, "_nom");
+                    string? sexe                = DB_Convertisseur.String(reader, "_sexe");
+                    Couleur? couleur            = DB_Convertisseur.Couleur(reader, "_couleur");
+                    DateTime? dateNaissance     = DB_Convertisseur.Date(reader, "_date_naiss");
+                    DateTime? dateDeces         = DB_Convertisseur.Date(reader, "_dte_deces");
+                    bool Sterile                = DB_Convertisseur.Bool(reader, "_sterile");
+                    DateTime? DateSterilisation = DB_Convertisseur.Date(reader, "_dte_sterile");
+                    string? Particularite       = DB_Convertisseur.String(reader, "_particularite");
+                    string? Description         = DB_Convertisseur.String(reader, "_description");
 
-                    string? idtype              = DB_Convertisseur.String(reader, "id_type_animal");
-                    EStatutAnimal statut        = (EStatutAnimal)DB_Convertisseur.StatutAnimal(reader, "statut");
-                    string? idabri              = DB_Convertisseur.String(reader, "id_abri"); 
+                    string? idtype              = DB_Convertisseur.String(reader, "_type");
+                    EStatutAnimal statut        = (EStatutAnimal)DB_Convertisseur.StatutAnimal(reader, "_statut");
+                    string? idabri              = DB_Convertisseur.String(reader, "_id_abri"); 
 
                     
 

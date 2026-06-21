@@ -42,7 +42,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             get
             {
                 int i = 0;
-                string retVal = Forma.Text("N°", "Id", "Date Crea.", "Nom", "Type", "Statut");
+                string retVal = Forma.Text("N°", "Id", "Date Crea.", "Nom", "Type", "Decision");
                 foreach (Animal a in _lesAnimaux.Values)
                 {
                     i++;
@@ -57,10 +57,15 @@ namespace Wpf_App_Pattoon_Animalerie.Service
                 return $"Liste des Animaux [{i}/{Count}]\n\n" + retVal;
             }
         }
+        public static Dictionary<string, Animal> ListeAllAnimal
+        {
+            get { return _lesAnimaux; }
+        }
+
         public static string LesAnimauxDerniers()
         {
             int i = 0;
-            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Nom", "Type", "Statut");
+            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Nom", "Type", "Decision");
             foreach (Animal a in _lesAnimaux.Values.OrderByDescending(ob => ob.DateCreation).Take(10))
             {
                 i++;
@@ -83,7 +88,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         public static string ListeByStatut(EStatutAnimal eStatut)
         {
             int i = 0;
-            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Nom", "Type", "Statut");
+            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Nom", "Type", "Decision");
             foreach (Animal a in _lesAnimaux.Values.Where(a => a.Statut == eStatut))
             {
                 i++;
@@ -100,7 +105,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         public static string ListeByStatut(EStatutAnimal eStatut, EStatutAnimal yStatut)
         {
             int i = 0;
-            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Nom", "Type", "Statut");
+            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Nom", "Type", "Decision");
             foreach (Animal a in _lesAnimaux.Values.Where(a => a.Statut == eStatut || a.Statut == yStatut))
             {
                 i++;
@@ -117,7 +122,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         public static string ListeByStatutNot(EStatutAnimal eStatut)
         {
             int i = 0;
-            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Nom", "Type", "Statut");
+            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Nom", "Type", "Decision");
             foreach (Animal a in _lesAnimaux.Values.Where(a => a.Statut != eStatut))
             {
                 i++;
@@ -134,7 +139,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         public static string ListeByStatutNot(EStatutAnimal eStatut, EStatutAnimal yStatut)
         {
             int i = 0;
-            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Nom", "Type", "Statut");
+            string retVal = Forma.Text("N°", "Id", "Date Crea.", "Nom", "Type", "Decision");
             foreach (Animal a in _lesAnimaux.Values.Where(a => a.Statut != eStatut && a.Statut != yStatut))
             {
                 i++;

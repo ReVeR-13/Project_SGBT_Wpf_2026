@@ -60,7 +60,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             } 
         }
         
-        public static string Manquants(Animal ami)
+        public static string ManquantsString(Animal ami)
         {
             int i = 0;
             Dictionary<string, Vaccination> vaccination = Vaccination.ByAnimal(ami);
@@ -87,6 +87,31 @@ namespace Wpf_App_Pattoon_Animalerie.Service
             }
 
             return Forma.Center($"Liste des Vaccins non effectués sur - {ami.Nom} - [{i}]\n") + retVal;
+        }
+        public static Dictionary<string, Vaccin> Manquants(Animal ami)
+        {
+            Dictionary<string, Vaccination> vaccination = Vaccination.ByAnimal(ami);
+            Dictionary<string, Vaccin> retVal = [];
+            foreach (Vaccin vc in _lesVaccins.Values)
+            {
+                bool veri = true;
+
+                foreach (Vaccination va in vaccination.Values)
+                {
+                    if (va.Vaccin == vc)
+                    {
+                        veri = false;
+                    }
+                }
+
+                if (veri)
+                {
+                    retVal.Add(vc.Id,vc);
+                }
+
+            }
+
+            return retVal;
         }
         public static IEnumerable<Vaccin> Get()
         {
@@ -156,12 +181,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         }
         public static int DB_Update(Vaccin vaccin)
         {
-            int ret = 0;
-            if (DB_Vaccin.UnVaccinById(vaccin.Id) != null)
-            {
-                ret = DB_Vaccin.Update(vaccin);
-            }
-            return ret;
+             return DB_Vaccin.Update(vaccin);  
         }
         public static int DB_Delete(Vaccin vaccin)
         {

@@ -62,14 +62,14 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         {
             return Id.CompareTo(other?._id);
         }
-        public string ToString()
+        public override string ToString()
         {
-            string retVal =
+            string retVal = Vaccin.Nom;/*
                 Forma.Texta2("Date", DateCreation.ToString("dd-MM-yyyy")) +
                 Forma.Texta2("Id", Id) +
                 Forma.Texta2("Nom Vaccin", Vaccin.Nom) +
                 Forma.Texta2("Nom Animal", Animal.Nom) +
-                Forma.Texta2("Remarque", Remaque == null ? "--" : Remaque);
+                Forma.Texta2("Remarque", Remaque == null ? "--" : Remaque);*/
 
             return retVal;
         }

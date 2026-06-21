@@ -42,11 +42,11 @@ namespace Wpf_App_Pattoon_Animalerie.Modele
         {
             string retVal = Forma.Texta2("Date", $"{DateCreation}") +
                 Forma.Texta2("Id Demande", $"{Demande.Id}") +
-                Forma.Texta2("Statut Dem.", $"{Demande.Statut}") +
+                Forma.Texta2("Decision Dem.", $"{Demande.Statut}") +
                 Forma.Texta2("Id Animal", $"{Demande.Animal.Id}") +
                 Forma.Texta2("Animal", $"{Demande.Animal.Nom}") +
-                Forma.Texta2("Contact", $"{Demande.Contact.Nom}") +
-                Forma.Texta2("Contact Gsm", $"{Demande.Contact.Gsm}") +
+                Forma.Texta2("ContactSelectionne", $"{Demande.Contact.Nom}") +
+                Forma.Texta2("ContactSelectionne Gsm", $"{Demande.Contact.Gsm}") +
                 Forma.Texta2("Adresse", $"{Demande.Contact.Adresse}") +
                 Forma.Texta2("Details", $"{Details}");
 

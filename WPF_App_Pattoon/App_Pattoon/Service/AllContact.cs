@@ -110,7 +110,7 @@ namespace Wpf_App_Pattoon_Animalerie.Service
         {
             if (Find(contact.Id) == null)
             {
-                throw new Exception($"[ Groupe Animaux] Cet Contact est deja supprimé :{contact.Id}");
+                throw new Exception($"[ Groupe Animaux] Cet ContactSelectionne est deja supprimé :{contact.Id}");
             }
             _lesContacts.Remove(contact.Id);
         }

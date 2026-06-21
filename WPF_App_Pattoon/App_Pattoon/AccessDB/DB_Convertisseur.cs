@@ -1,6 +1,7 @@
-﻿using Wpf_App_Pattoon_Animalerie.Modele;
+﻿using Npgsql;
+using System.Data.SqlTypes;
+using Wpf_App_Pattoon_Animalerie.Modele;
 using Wpf_App_Pattoon_Animalerie.Service;
-using Npgsql;
 
 
 namespace Wpf_App_Pattoon_Animalerie.AccessDB
@@ -9,7 +10,8 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
     {
         public static string? String(NpgsqlDataReader reader,string colonne)
         {
-            return reader.IsDBNull(reader.GetOrdinal(colonne)) ? null :  reader.GetString(reader.GetOrdinal(colonne));
+            int index = reader.GetOrdinal(colonne);
+            return reader.IsDBNull(index) ? null :  reader.GetString(index);
         }
         public static DateTime? Date(NpgsqlDataReader reader,string colonne)
         {
@@ -21,7 +23,7 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
         {
             EStatutAbri? retval = null;
             string? valeur = String(reader,colonne);
-            if (Enum.TryParse(valeur,out EStatutAbri result))
+            if (Enum.TryParse(valeur,true,out EStatutAbri result))
             {
                 retval = result; 
             }
@@ -31,7 +33,7 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
         {
             EStatutAnimal? retval = null;
             string? valeur = String(reader, colonne);
-            if (Enum.TryParse(valeur, out EStatutAnimal result))
+            if (Enum.TryParse(valeur,true ,out EStatutAnimal result))
             {
                 retval = result;
             }
@@ -41,7 +43,7 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
         {
             ETypeDemande? retval = null;
             string? valeur = String(reader, colonne);
-            if (Enum.TryParse(valeur, out ETypeDemande result))
+            if (Enum.TryParse(valeur, true, out ETypeDemande result))
             {
                 retval = result;
             }
@@ -51,7 +53,7 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
         {
             EStatutDemande? retval = null;
             string? valeur = String(reader, colonne);
-            if (Enum.TryParse(valeur, out EStatutDemande result))
+            if (Enum.TryParse(valeur,true, out EStatutDemande result))
             {
                 retval = result;
             }
@@ -61,7 +63,7 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
         {
             EStatutValidation? retval = null;
             string? valeur = String(reader, colonne);
-            if (Enum.TryParse(valeur, out EStatutValidation result))
+            if (Enum.TryParse(valeur, true, out EStatutValidation result))
             {
                 retval = result;
             }
@@ -70,43 +72,53 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
 
         public static Animal? Animal(NpgsqlDataReader reader,string colonne)
         {
-            string info = String(reader, colonne);
-            return AllAnimal.Rechercher(info);
+            string? info = String(reader, colonne);
+            return info == null? null: AllAnimal.Rechercher(info);
 
         }
         public static Contact? Contact(NpgsqlDataReader reader, string colonne)
         {
-            return AllContacts.Find(String(reader, colonne));
+            string? info = String(reader, colonne);
+            return info == null ? null : AllContacts.Find(info);
 
         }
         public static Vaccin? Vaccin(NpgsqlDataReader reader, string colonne)
         {
-            return AllVaccin.Find(reader.GetString(reader.GetOrdinal(colonne)));
+            string? info = reader.GetString(reader.GetOrdinal(colonne));
+            return info == null ? null : AllVaccin.Find(info);
 
         }
-        public static Compatibilite Compatibilite(NpgsqlDataReader reader, string colonne)
+        public static Compatibilite? Compatibilite(NpgsqlDataReader reader, string colonne)
         {
-            return AllCompatibilite.Find(reader.GetString(reader.GetOrdinal(colonne)));
+            string? info = reader.GetString(reader.GetOrdinal(colonne));
+            return info == null ? null : AllCompatibilite.Find(info);
         }
-        public static Couleur Couleur(NpgsqlDataReader reader, string colonne)
+        public static Couleur? Couleur(NpgsqlDataReader reader, string colonne)
         {
-            return AllCouleur.Find(reader.GetString(reader.GetOrdinal(colonne)));
+            string? info = reader.GetString(reader.GetOrdinal(colonne));
+            return info == null ? null : AllCouleur.Find(info);
         }
         public static Demande? Demande(NpgsqlDataReader reader, string colonne)
         {
-            return AllDemande.Find(reader.GetString(reader.GetOrdinal(colonne)));
+            string? info = reader.GetString(reader.GetOrdinal(colonne));
+            return info == null ? null : AllDemande.Find(info);
 
         }
         public static MotifEntree? MotifEntree(NpgsqlDataReader reader, string colonne)
         {
-            return AllMotifsEntrees.FindById(reader.GetString(reader.GetOrdinal(colonne)));
+            string? info = reader.GetString(reader.GetOrdinal(colonne));
+            return info == null ? null : AllMotifsEntrees.FindById(info);
 
         }
         public static MotifSortie? MotifSortie(NpgsqlDataReader reader, string colonne)
         {
-            return AllMotifsSortie.FindById(reader.GetString(reader.GetOrdinal(colonne)));
+            string? info = reader.GetString(reader.GetOrdinal(colonne));
+            return info == null ? null : AllMotifsSortie.FindById(info);
 
         }
+
+        public static string SelectFrom(string func) => $"Select * from {func}";
+
     }
 
     public static class Requets
@@ -156,12 +168,13 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
                 {
                     Console.WriteLine(ex.Message);
                     Console.Read();
+
                     throw new ExceptionDB(cmdText, ex.Message);
                 }
                 return result;
             }
         }
-        public static int ExecuteNonQuery(string cmdText, Dictionary<string,(NpgsqlTypes.NpgsqlDbType Type, object Value)> parametres)
+        public static int ExecuteNonQuery(string cmdText, Dictionary<string, (NpgsqlTypes.NpgsqlDbType Type, object Value)> parametres)
         {
             using (NpgsqlCommand npgsql = new NpgsqlCommand(cmdText, AccessDB.SqlConn))
             {
@@ -175,7 +188,7 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
 
                 npgsql.Prepare();
 
-                if(parametres != null)
+                if (parametres != null)
                 {
                     int i = 0;
                     foreach (var param in parametres)
@@ -189,14 +202,15 @@ namespace Wpf_App_Pattoon_Animalerie.AccessDB
                 {
                     return npgsql.ExecuteNonQuery();
 
-                }catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                     Console.ReadLine();
-                    throw new ExceptionDB(cmdText,ex.Message);
+                    throw new ExceptionDB(cmdText, ex.Message);
                 }
-            } 
+            }
         }
-        
+
     }
 }
