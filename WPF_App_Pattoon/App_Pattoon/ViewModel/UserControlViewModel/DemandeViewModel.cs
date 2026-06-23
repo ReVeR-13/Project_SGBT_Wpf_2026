@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Wpf_App_Pattoon_Animalerie.Commands;
 using Wpf_App_Pattoon_Animalerie.Modele;
@@ -36,7 +31,7 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
             this._message = string.Empty;
 
             NouveauCommand = new RelayCommand(_ => NouvelDemande(this._demandeSelectionne), _ => true);
-            OuvrirDetailCommand = new RelayCommand(_ => NouvelDemande(this._demandeSelectionne),_=> this._demandeSelectionne != null);
+            OuvrirDetailCommand = new RelayCommand(_ => NouvelDemande(this._demandeSelectionne), _ => this._demandeSelectionne != null);
         }
 
         public ObservableCollection<Demande> LesDemandes { get => _lesDemandes; }
@@ -55,8 +50,27 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
 
         public void NouvelDemande(Demande? demande)
         {
-            var vm = new DemandeDetailViewModel(demande,null,null, _windowService);
+            var vm = new DemandeDetailViewModel(demande, null, null, _windowService,
+                onSaved: MiseajourDemande,
+                onCreated: AjoutDemande);
             _windowService.OuvrirDetail(vm);
+        }
+
+        private void MiseajourDemande(Demande demandeModifiee)
+        {
+            var exist = LesDemandes.FirstOrDefault(d => d.Id == demandeModifiee.Id);
+            if (exist != null)
+            {
+
+                var idx = LesDemandes.IndexOf(exist);
+                LesDemandes[idx] = demandeModifiee;
+
+            }
+        }
+
+        private void AjoutDemande(Demande newDemande)
+        {
+            LesDemandes.Add(newDemande);
         }
     }
 }

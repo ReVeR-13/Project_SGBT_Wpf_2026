@@ -47,6 +47,7 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details
         private ObservableCollection<Abri> _lesAbrisDisponible;
         private ObservableCollection<TypeAnimal> _lesTypes;
 
+
         private IWindowService _windowService;
         public ICommand NouveauCommand { get; }
         public ICommand EnregistreCommand { get; }
@@ -69,9 +70,15 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details
 
         public ICommand EtapeSuivantCommand { get; }
 
+        private readonly Action<Animal>? _onSaved;
+        private readonly Action<Animal>? _onCreated;
+        private readonly Action<Animal>? _onDelete;
 
-        public AnimalDetailViewModel(Animal animal, IWindowService windowService)
+        public AnimalDetailViewModel(Animal animal, IWindowService windowService, Action<Animal>? onSaved, Action<Animal>? onCreated, Action<Animal>? onDelete)
         {
+            _onSaved = onSaved;
+            _onCreated = onCreated;
+            _onDelete = onDelete;
             _windowService = windowService;
             _animal = animal;
             Id = animal?.Id;
@@ -108,8 +115,12 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details
                 _lesCouleurs.Add(animal.Couleur);
 
             }
+            else
+            {
+                Nouveau();
+            }
 
-            
+
 
             NouveauCommand = new RelayCommand(_ => Nouveau(), _ => AnimalSelectionne != null );
             EnregistreCommand = new RelayCommand(_ => EnregistrerAnimal(), _ => PeutEnregistrer());
@@ -395,13 +406,22 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details
 
                         if (x == 1)
                         {
+                            Forma.MsgInfo("Animal", $"Animal creer: {animal?.Nom}");
                             AnimalSelectionne = animal;
+                            _onCreated?.Invoke( animal );
+                            MessageBoxResult result = Forma.MsgValidation("Message", "Voulez-vous faire l'entree de l' animal? ");
+
+                            if (result == MessageBoxResult.Yes)
+                            {
+                                OuvrirDemande();
+                            }
                         }
                     }
                 }
                 else
                 {
                     Message = AnimalSelectionne.Update(TypeSelectionne,Nom,SexeSelectionne,DateNaissance,Sterile,DateSterilisation,Description, Particularite,AbriSelectionne);
+                    _onSaved?.Invoke( AnimalSelectionne );
                 }
 
             }
@@ -417,11 +437,19 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details
             {
                 if (AnimalSelectionne != null)
                 {
-                    int x = Animal.Delete(AnimalSelectionne);
-                    if (x == 1)
+                    MessageBoxResult result = Forma.MsgValidation("Message", "Voulez-vous supprimer cette element? ");
+
+                    if (result == MessageBoxResult.Yes)
                     {
-                        Nouveau();
+                        int x = Animal.Delete(AnimalSelectionne);
+                        if (x == 1)
+                        {
+                            _onDelete?.Invoke( AnimalSelectionne );
+                            Forma.MsgInfo("Animal", $"Animal Supprimer");
+                            Nouveau();
+                        }
                     }
+                    
                 }
             }catch (Exception ex)
             {
@@ -643,7 +671,7 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details
         }
         private void OuvrirDemande()
         {
-            var vm = new DemandeDetailViewModel(null,null,AnimalSelectionne,_windowService);
+            var vm = new DemandeDetailViewModel(null,null,AnimalSelectionne,_windowService,null,null);
             _windowService.OuvrirDetail(vm);
         }
 

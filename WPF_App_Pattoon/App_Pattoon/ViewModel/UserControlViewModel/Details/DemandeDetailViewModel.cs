@@ -49,14 +49,19 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details
 
         public ICommand SuivantCommand { get; }
 
-        public DemandeDetailViewModel(Demande? demande,Contact? contact,Animal? animal,IWindowService windowService)
+        private readonly Action<Demande>? _onSaved;
+        private readonly Action<Demande>? _onCreated;
+
+        public DemandeDetailViewModel(Demande? demande,Contact? contact,Animal? animal,IWindowService windowService,Action<Demande>? onSaved, Action<Demande>? onCreated)
         {
             _lesContacts = [];
-            _lesAnimaux = [];
+            LesAnimaux = new ObservableCollection<Animal>();
             _lesTypes = Enum.GetValues<ETypeDemande>();
             _windowService = windowService;
             _demande = demande;
             _label = string.Empty;
+            _onSaved = onSaved;
+            _onCreated = onCreated; 
 
             _id = demande?.Id;
             _dateOuverture = demande == null ? DateTime.Now : demande.DateCreation ;
@@ -77,7 +82,8 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details
 
             if (contact != null)
             {
-                _lesContacts.Add(contact);
+                LesContacts = [];
+                LesContacts.Add(contact);
                 ContactSelectionne = contact;
             }
             else
@@ -87,12 +93,13 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details
 
             if (animal != null)
             {
-                _lesAnimaux.Add(animal);
+                LesAnimaux = [];
+                LesAnimaux.Add(animal);
                 AnimalSelectionne = animal;
             }
             else
             {
-                _lesAnimaux = new ObservableCollection<Animal>(AllAnimal.ListeAllAnimal.Values);
+                LesAnimaux = new ObservableCollection<Animal>(AllAnimal.ListeAllAnimal.Values);
             }
              
             _title = $"FICHE DEMANDE N° [ {_id} ]";
@@ -243,6 +250,8 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details
             }
             else
             {
+                Demande.Save(DemandeSelectionne);
+                _onSaved?.Invoke(DemandeSelectionne);
                 Message = $"--";
                 
             }
@@ -266,6 +275,7 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details
 
                 if (Demande.Save(demande) == 1)
                 {
+                    _onCreated?.Invoke(demande);
                     Message = $"[Succes] Demande enregistré avec succes";
 
                     MessageBoxResult msgBox = MessageBox.Show

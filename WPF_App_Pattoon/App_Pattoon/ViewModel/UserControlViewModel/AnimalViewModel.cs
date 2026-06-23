@@ -42,9 +42,32 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
 
         private void OuvrirDetail()
         {
-            var vm = new AnimalDetailViewModel(AnimalSelectionne,_windowService);
+            var vm = new AnimalDetailViewModel(AnimalSelectionne,_windowService,
+                onSaved:MiseajourAnimal,
+                onCreated:AjoutAnimal,
+                onDelete:RemoveAnimal);
             _windowService.OuvrirDetail(vm);
 
+        }
+
+        private void MiseajourAnimal(Animal animalModifiee)
+        {
+            var exist = LesAnimaux.FirstOrDefault(d => d.Id == animalModifiee.Id);
+            if (exist != null)
+            {
+
+                var idx = LesAnimaux.IndexOf(exist);
+                LesAnimaux[idx] = animalModifiee;
+
+            }
+        }
+        private void AjoutAnimal(Animal newAnimal)
+        {
+            LesAnimaux.Add(newAnimal);
+        }
+        private void RemoveAnimal(Animal remAnimal)
+        {
+            LesAnimaux.Remove(remAnimal);
         }
     }
 }

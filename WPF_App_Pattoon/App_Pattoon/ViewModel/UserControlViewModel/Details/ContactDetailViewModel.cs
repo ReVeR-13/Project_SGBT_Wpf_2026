@@ -39,8 +39,15 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details
 
         private string _message;
 
-        public ContactDetailViewModel(Contact contact, TypeContactViewModel typeContactViewModel, IWindowService windowService)
+        private readonly Action<Contact>? _onSaved;
+        private readonly Action<Contact>? _onCreated;
+        private readonly Action<Contact>? _onDelete;
+
+        public ContactDetailViewModel(Contact contact, TypeContactViewModel typeContactViewModel, IWindowService windowService , Action<Contact>? onSaved, Action<Contact>? onCreated, Action<Contact>? onDelete)
         {
+            this._onSaved = onSaved;
+            this._onCreated = onCreated;
+            this._onDelete = onDelete;
             _windowService = windowService;
             _contact = contact;
             _type = typeContactViewModel;
@@ -332,11 +339,13 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details
                     if (Contact.Save(contact) == 1)
                     {
                         ContactSelectionne = contact;
+                        _onCreated?.Invoke(contact);
                         Message = $"{contact.Nom} est créé";
                     }
                 }else
                 {
                     Message= ContactSelectionne.Modification(Niss, DateNaissance, Nom, Prenom, Gsm, Telephone, Mail, CodePostal, Localite, Adresse);
+                    _onSaved?.Invoke(ContactSelectionne);
                 }
                 
 
@@ -354,6 +363,7 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel.Details
                 {
                     if (Contact.Delete(ContactSelectionne) == 1)
                     {
+                        _onDelete?.Invoke(ContactSelectionne);
                         ContactSelectionne = null;
                         Message = "Contact supprimé";
                     }

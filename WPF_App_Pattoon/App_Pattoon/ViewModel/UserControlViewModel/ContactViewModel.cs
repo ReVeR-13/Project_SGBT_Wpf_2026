@@ -89,10 +89,12 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
 
         }
 
-
         private void NouveauContact(Contact? contact)
         {
-            var vm = new ContactDetailViewModel(contact,_type,_windowService);
+            var vm = new ContactDetailViewModel(contact,_type,_windowService,
+                onSaved: MiseajourContact,
+                onCreated: AjoutContact,
+                onDelete: RemoveContact);
             _windowService.OuvrirDetail(vm);
         }
 
@@ -106,6 +108,26 @@ namespace Wpf_App_Pattoon_Animalerie.ViewModel.UserControlViewModel
                 this.ContactSelectionne.AddType(selected);
             }
 
+        }
+
+        private void MiseajourContact(Contact contactModifiee)
+        {
+            var exist = LesContacts.FirstOrDefault(d => d.Id == contactModifiee.Id);
+            if (exist != null)
+            {
+
+                var idx = LesContacts.IndexOf(exist);
+                LesContacts[idx] = contactModifiee;
+
+            }
+        }
+        private void AjoutContact(Contact newContact)
+        {
+            LesContacts.Add(newContact);
+        }
+        private void RemoveContact(Contact remContact)
+        {
+            LesContacts.Remove(remContact);
         }
 
     }
